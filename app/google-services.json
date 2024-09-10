@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "616302856815",
+    "project_id": "sampleauthentication-a84c2",
+    "storage_bucket": "sampleauthentication-a84c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616302856815:android:06c862d7c15975b06e9b9a",
+        "android_client_info": {
+          "package_name": "com.example.sampleauthentication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4smJ-2hcqEY8HpyqhcIAG77QduqWdNao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

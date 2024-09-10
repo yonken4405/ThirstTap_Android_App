@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#CC0000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="outline">#D9D9D9</color>
+    <color name="bluebg">#84C2FF</color>
+    <color name="blueFont">#259DD0</color>
+    <color name="InputBoxOutline">#D9D9D9</color>
+    <color name="BottomSheetBg">#F0F8F7</color>
+    <color name="InputText">#909594</color>
+    <color name="disabledOutline"> #616161</color>
+
+</resources>
+
