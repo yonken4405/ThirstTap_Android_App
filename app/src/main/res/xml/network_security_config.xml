@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Android is blocking HTTP traffic due to its network security configuration.
+Starting from Android 9 (Pie), cleartext (non-HTTPS) traffic is
+blocked by default for security reasons.-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.20.170</domain> </domain-config>
+</network-security-config>

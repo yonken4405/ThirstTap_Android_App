@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "304929874388",
+    "project_id": "thirsttap-caca0",
+    "storage_bucket": "thirsttap-caca0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304929874388:android:337f898dc4c5da97c9b641",
+        "android_client_info": {
+          "package_name": "com.example.thirsttap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVJ_-rdtTC5jX13zELddWjMrJl8oMhTxg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
