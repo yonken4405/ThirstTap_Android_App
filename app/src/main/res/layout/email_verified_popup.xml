@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="294dp"
+    android:layout_height="293dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/popup_round_corners">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/check_ic" />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="center"
+        android:text="Verified!"
+        android:textColor="#252525"
+        android:textSize="23sp" />
+
+    <TextView
+        android:layout_marginTop="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/montserrat_medium"
+        android:gravity="center"
+        android:text="You have successfully verified the \naccount"
+        android:textColor="#252525"
+        android:textSize="13sp" />
+
+    <Button
+        android:id="@+id/popup_close_button"
+        android:layout_width="187dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/blueFont"
+        android:fontFamily="@font/montserrat_semibold"
+        android:gravity="center"
+        android:text="Continue"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:cornerRadius="10dp" />
+
+</LinearLayout>

@@ -4,5 +4,5 @@ Starting from Android 9 (Pie), cleartext (non-HTTPS) traffic is
 blocked by default for security reasons.-->
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">192.168.20.170</domain> </domain-config>
+        <domain includeSubdomains="true">192.168.23.43</domain> </domain-config>
 </network-security-config>

@@ -1,15 +1,10 @@
-package com.example.thirsttap;
+package com.example.thirsttap.Login;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +14,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.ForgotPassword.ForgotPasswordActivity;
+import com.example.thirsttap.MainActivity;
+import com.example.thirsttap.R;
+import com.example.thirsttap.Signup.SignupBottomSheet;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -35,11 +33,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class LoginBottomSheet extends BottomSheetDialogFragment {
     TextInputEditText email, password;
-    Button loginBtn, googleBtn;
+    Button loginBtn, googleBtn, forgotPassBtn;
     TextView signUp;
-    String url_login = "http://192.168.20.170/ThirstTap/login.php"; // Ensure this is correct
+    String url_login = "https://scarlet2.io/Yankin/ThirstTap/login.php"; // Ensure this is correct
     TextInputLayout loginPass, loginEmail;
 
     @Nullable
@@ -54,6 +53,15 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         signUp = view.findViewById(R.id.sign_up);
         loginPass = view.findViewById(R.id.password_layout);
         loginEmail = view.findViewById(R.id.email_layout);
+        forgotPassBtn = view.findViewById(R.id.forgot_pass_button);
+
+        forgotPassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         // LOGIN: Signing in

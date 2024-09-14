@@ -1,12 +1,6 @@
-package com.example.thirsttap;
+package com.example.thirsttap.Signup;
 
-import android.content.Intent;
-import android.graphics.drawable.StateListDrawable;
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -22,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -30,6 +23,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.Login.LoginBottomSheet;
+import com.example.thirsttap.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -47,9 +42,10 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
     TextInputLayout passError, conPassError, emailLayout, nameLayout, numLayout;
     TextView errorMess;
     ImageButton backBtn;
+    Button signupBtn;
 
     // URL for the signup endpoint
-    String url_signup = "http://192.168.20.170/ThirstTap/register.php"; // Ensure this is correct
+    String url_signup = "https://scarlet2.io/Yankin/ThirstTap/register.php"; // Ensure this is correct
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -57,7 +53,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.signup_layout, container, false);
 
-        Button signupBtn = view.findViewById(R.id.signup_button);
+        signupBtn = view.findViewById(R.id.signup_button);
         signupEmail = view.findViewById(R.id.signup_email);
         signupPassword = view.findViewById(R.id.signup_password);
         confirmPassword = view.findViewById(R.id.confirm_password);
@@ -265,6 +261,8 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
                 return params;
             }
         };
+
+        //extend default timeout in case of low signal
         int socketTimeout = 30000; // 30 seconds timeout
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
@@ -280,10 +278,6 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             dismiss();
             showVerificationBottomSheet(email);
         });
-
-//        Intent intent = new Intent(SignupBottomSheet.this.getActivity(), EmailVerificationBottomSheet.class);
-//        intent.putExtra("email", signupEmail.getText().toString().trim());
-//        startActivity(intent);
 
     }
 

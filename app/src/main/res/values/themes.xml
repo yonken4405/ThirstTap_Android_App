@@ -7,5 +7,6 @@
 
     <style name="Theme.ThirstTap" parent="Base.Theme.ThirstTap">
         <item name="android:statusBarColor">@android:color/transparent</item>
+
     </style>
 </resources>
