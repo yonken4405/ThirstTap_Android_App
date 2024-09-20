@@ -20,11 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThirstTap"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/my_string_api_key" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".Signup.EmailVerificationBottomSheet"
             android:exported="false" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".ClientOnBoarding.SplashScreen"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -34,15 +43,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login.LoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
 
         <activity android:name=".ForgotPassword.ForgotPasswordActivity"
             android:exported="true" />
+
+        <activity android:name=".ClientOnBoarding.OnboardingActivity"
+            android:exported="true" />
+
+        <activity android:name=".AddressesPage.AddressActivity"
+            />
+
+
+        <activity android:name=".OrderPage.OrderFragment"
+            android:exported="true"/>
+
+
 
 
     </application>

@@ -1,0 +1,665 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BottomSheetBg"
+    >
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="166dp"
+        android:src="@drawable/order_bubble1"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_gravity="right"
+        />
+
+    <ImageView
+        android:layout_width="216dp"
+        android:layout_height="315.3dp"
+        android:src="@drawable/order_bubble2"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_gravity="left|center"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Back Button -->
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/back_btn" />
+
+            <!-- Store Name -->
+            <TextView
+                android:id="@+id/store_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/nunito_black"
+                android:text="Stop and Quench"
+                android:textColor="@color/blueFont"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Store Address -->
+            <TextView
+                android:id="@+id/store_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/loc_pin"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
+                android:text="V.H.Garces, Talisay, Cebu"
+                android:textColor="@color/josiahBlack"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/gallon_size_background"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp">
+
+                <!-- Select Water Type Section -->
+                <TextView
+                    android:id="@+id/water_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/montserrat_extrabold"
+                    android:text="Select water type"
+                    android:textColor="@color/blueFont"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/water_type_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Please select the type of water that best suits your needs from the options below."
+                    android:textColor="@color/gray"
+                    android:textSize="10sp" /> <!-- Initially hidden -->
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- RadioGroup for water types -->
+                        <RadioGroup
+                            android:id="@+id/water_type_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <!-- Alkaline RadioButton -->
+                            <RadioButton
+                                android:id="@+id/radio_alkaline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/selector_water_type"
+                                android:button="@null"
+                                android:drawableBottom="@drawable/ic_alkaline_water"
+                                android:drawablePadding="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:gravity="center"
+                                android:paddingLeft="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="17dp"
+                                android:text="Alkaline"
+                                android:textColor="@color/gray"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:id="@+id/desc_alkaline"
+                                android:layout_width="160dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/water_description_background"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="8dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:fontFamily="@font/montserrat_extrabold"
+                                    android:text="Alkaline"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Purified water with a high pH value (pH above 7 is considered alkaline, below acidic, and 7 is considered neutral)."
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <!-- Distilled RadioButton -->
+                            <RadioButton
+                                android:id="@+id/radio_distilled"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/selector_water_type"
+                                android:button="@null"
+                                android:drawableBottom="@drawable/ic_alkaline_water"
+                                android:drawablePadding="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:gravity="center"
+                                android:paddingLeft="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="17dp"
+                                android:text="Distilled"
+                                android:textColor="@color/gray"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:id="@+id/desc_distilled"
+                                android:layout_width="160dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/water_description_background"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="8dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:fontFamily="@font/montserrat_extrabold"
+                                    android:text="Distilled"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Purified water with a high pH value (pH above 7 is considered alkaline, below acidic, and 7 is considered neutral)."
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/gallon_size_background"
+                android:padding="16dp"
+                android:layout_marginTop="24dp">
+
+                <TextView
+                    android:id="@+id/size_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Size"
+                    android:textColor="@color/blueFont"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/size_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Choose the size of water container that fits your requirements from the following options."
+                    android:textColor="@color/gray"
+                    android:textSize="10sp" />
+
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <!-- RadioGroup for size options -->
+                    <RadioGroup
+                        android:id="@+id/size_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <!-- 5.00 Gal Slim -->
+                        <RadioButton
+                            android:id="@+id/radio_round"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_water_type"
+                            android:button="@null"
+                            android:drawableBottom="@drawable/ic_round_container"
+                            android:drawablePadding="3dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:gravity="center"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="12dp"
+                            android:text="5.00 Gal Round"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp" />
+
+                        <LinearLayout
+                            android:id="@+id/price_round"
+                            android:layout_width="110dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/water_description_background"
+                            android:gravity="top|left"
+                            android:orientation="vertical"
+                            android:padding="8dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_marginTop="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="5.00 Gal"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:text="Round container"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:text="25.00"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/radio_slim"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_water_type"
+                            android:button="@null"
+                            android:drawableBottom="@drawable/ic_slim_container"
+                            android:drawablePadding="3dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:gravity="center"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="12dp"
+                            android:text="5.00 Gal Slim"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp" />
+
+                        <LinearLayout
+                            android:id="@+id/price_slim"
+                            android:layout_width="110dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/water_description_background"
+                            android:gravity="top|left"
+                            android:orientation="vertical"
+                            android:padding="8dp"
+                            android:visibility="gone">
+
+
+                            <TextView
+                                android:layout_marginTop="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="5.00 Gal"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:text="Slim container"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:text="25.00"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+
+                        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+                        <RadioButton
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/radio_small_slim"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_water_type"
+                            android:button="@null"
+                            android:drawableBottom="@drawable/ic_small_slim_container"
+                            android:drawablePadding="3dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:gravity="center"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="12dp"
+                            android:text="2.50 Gal Slim"
+                            android:textColor="@color/gray"
+                            android:textSize="10sp" />
+
+                        <LinearLayout
+                            android:id="@+id/price_small_slim"
+                            android:layout_width="110dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/water_description_background"
+                            android:gravity="top|left"
+                            android:orientation="vertical"
+                            android:padding="10sp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_marginTop="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="5.00 Gal"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:text="Slim container"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:text="25.00"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+
+                    </RadioGroup>
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/gallon_size_background"
+                android:padding="16dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:shadowColor="@color/BottomSheetBg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Container Status"
+                    android:textColor="@color/blueFont"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"/>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/container_group"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="250dp"
+                            android:layout_height="95dp"
+                            android:padding="16dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/container_status_background">
+
+                            <TextView
+                                android:id="@+id/new_container_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="New Containers"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/new_container_description"
+                                android:layout_width="228dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Choose the size of water container that fits your requirements from the following options."
+                                android:textColor="@color/white"
+                                android:textSize="11.2sp"
+                                />
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/new_container_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/water_description_background"
+                            android:buttonTint="#FFFFFF"
+                            android:buttonTintMode="src_atop"
+                            app:useMaterialThemeColors="false" />
+
+                        <LinearLayout
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="250dp"
+                            android:layout_height="95dp"
+                            android:padding="16dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/container_status_background">
+
+                            <TextView
+                                android:id="@+id/ex_container_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Exchange Containers"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/ex_container_description"
+                                android:layout_width="228dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Supplier will exchange your containers with theirs upon delivery."
+                                android:textColor="@color/white"
+                                android:textSize="11.2sp"
+                                />
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/ex_container_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/water_description_background"/>
+
+
+                    </RadioGroup>
+
+
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/blue_border">
+
+                <TextView
+                    android:id="@+id/quantity_et"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Quantity"
+                    android:textColor="#0BB3E4"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:layout_below="@+id/quantity_et"
+                    android:id="@+id/quantity_desc_et"
+                    android:layout_width="175dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Some suppliers of selected size has a minimum order of 3"
+                    android:textColor="#0BB3E4"
+                    android:textSize="11.2sp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:background="@drawable/calcu_border"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/minus_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:src="@drawable/minus_ic"
+                       />
+
+                    <TextView
+                        android:id="@+id/counter_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:padding="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/white"/>
+
+                    <ImageButton
+                        android:id="@+id/plus_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:src="@drawable/plus_ic"/>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/proceed_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/blueFont"
+                android:fontFamily="@font/montserrat_semibold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Proceed"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+
+
+
+
+
+        </LinearLayout>
+        
+    </ScrollView>
+    
+    
+
+</FrameLayout>

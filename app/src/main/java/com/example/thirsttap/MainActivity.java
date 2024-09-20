@@ -4,17 +4,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.compose.animation.core.Animation;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.thirsttap.ForgotPassword.ForgotPasswordFragment1;
+import com.example.thirsttap.AddressesPage.AddressSetupFragment;
+import com.example.thirsttap.HomePage.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,12 +21,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+
+
+
+
+        // Hide navigation and status bar icons
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION   // Hides bottom nav bar
+
+        );
+
+
 
         // Load the first fragment on activity launch
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new ForgotPasswordFragment1())
+                    .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
         }
     }

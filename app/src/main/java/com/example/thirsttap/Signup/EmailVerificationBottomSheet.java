@@ -137,12 +137,8 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
                         if ("1".equals(jsonResponse.optString("success", "0"))) {
-
                             dismiss();
                             showPopup();
-
-
-
                         } else {
                             Toast.makeText(getContext(), "Verification failed", Toast.LENGTH_SHORT).show();
                         }

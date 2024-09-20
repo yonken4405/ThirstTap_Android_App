@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/rounded_botsheet"
+    android:id="@+id/bottom_sheet_layout">
+
+    <!-- Title for the bottom sheet -->
+    <TextView
+        android:textColor="@color/blueFont"
+        android:id="@+id/location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search the buildingAddress of delivery location"
+        android:textSize="15sp"
+        android:fontFamily="@font/nunito_extrabold"
+        android:paddingBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="13sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/loc_pin"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/location_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:textSize="13sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/josiahBlack"
+            />
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="@color/blueFont"
+        android:fontFamily="@font/montserrat_semibold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Confirm Location"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+</LinearLayout>

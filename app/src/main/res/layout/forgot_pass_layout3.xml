@@ -48,24 +48,26 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:hint="Enter your password"
+            android:textColorHint="#056B9F"
             app:boxBackgroundColor="@null"
+            app:boxStrokeColor="@color/white"
             app:boxStrokeErrorColor="@color/red"
             app:errorEnabled="false"
             app:errorIconDrawable="@null"
             app:errorTextColor="@color/red"
             app:passwordToggleEnabled="true"
-            app:startIconDrawable="@drawable/lock_icon"
-            app:startIconTint="@null">
+            app:passwordToggleTint="#035B85"
+            app:startIconDrawable="@drawable/lock_icon">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signup_password"
+                android:id="@+id/reset_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:imeOptions="actionNext"
                 android:inputType="textPassword"
                 android:paddingStart="43dp"
-                android:textColor="@color/black"
+
                 android:textSize="12sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -77,24 +79,28 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:hint="Confirm your password"
+            android:textColorHint="#056B9F"
             app:boxBackgroundColor="@null"
             app:boxStrokeErrorColor="@color/red"
             app:errorEnabled="false"
             app:errorIconDrawable="@null"
             app:errorTextColor="@color/red"
             app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#035B85"
+
             app:startIconDrawable="@drawable/lock_icon"
-            app:startIconTint="@null">
+            app:startIconTintMode="src_in">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/confirm_password"
+                app:boxStrokeColor="@color/white"
+                android:id="@+id/confirm_reset_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:paddingStart="43dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="12sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

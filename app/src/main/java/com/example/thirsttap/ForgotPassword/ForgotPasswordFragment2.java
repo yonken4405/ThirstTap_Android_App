@@ -67,6 +67,8 @@ public class ForgotPasswordFragment2 extends Fragment {
                     otpFields[3].getText().toString().trim();
 
             verifyEmail(code, email);
+            verifyBtn.setEnabled(false);
+
 
         });
 
@@ -103,14 +105,21 @@ public class ForgotPasswordFragment2 extends Fragment {
                         if ("1".equals(jsonResponse.optString("success", "0"))) {
                             Toast.makeText(getContext(), "Email verification successful!", Toast.LENGTH_SHORT).show();
 
+                            // Create a new instance of ForgotPasswordFragment3 with arguments
+                            ForgotPasswordFragment3 fragment = new ForgotPasswordFragment3();
+                            Bundle args = new Bundle();
+                            args.putString("email", email);
+                            fragment.setArguments(args);
+
                             // Navigate to ForgotPasswordFragment3
                             getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, new ForgotPasswordFragment3())
+                                    .replace(R.id.fragment_container, fragment)
                                     .addToBackStack(null)
                                     .commit();
 
                         } else {
                             Toast.makeText(getContext(), "Verification failed", Toast.LENGTH_SHORT).show();
+                            verifyBtn.setEnabled(true);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

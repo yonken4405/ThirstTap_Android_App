@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:background="@drawable/blue_border"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/address_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/default_border"
+        android:fontFamily="@font/montserrat_medium"
+        android:padding="5dp"
+        android:text="Default"
+        android:textColor="@color/blueFont"
+        android:textSize="11sp"
+        android:layout_marginBottom="5dp"/>
+
+
+    <TextView
+        android:layout_below="@+id/address_default"
+        android:id="@+id/address_street"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="@color/josiahBlack"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/address_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/address_street"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="@color/josiahBlack"
+        android:textSize="11sp" />
+
+    <ImageButton
+        android:layout_marginRight="10dp"
+        android:id="@+id/edit_btn"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_toLeftOf="@+id/delete_btn"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit_ic" />
+
+
+
+    <ImageButton
+        android:id="@+id/delete_btn"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/trash_ic" />
+
+</RelativeLayout>

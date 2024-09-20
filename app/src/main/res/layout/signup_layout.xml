@@ -212,9 +212,10 @@
                 android:id="@+id/checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_state_list"
-                android:checked="false"
-                android:layout_marginLeft="-15dp" />
+                android:layout_marginLeft="-15dp"
+                android:buttonTint="@color/blueFont"
+                android:buttonTintMode="multiply"
+                android:checked="false" />
 
             <TextView
                 android:id="@+id/error_message"

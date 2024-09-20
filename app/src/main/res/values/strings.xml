@@ -11,4 +11,6 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="my_string_api_key">AIzaSyAdfmWc0Dc2xtLFRRmeV5v3DXTuPYlWoxQ</string>
 </resources>

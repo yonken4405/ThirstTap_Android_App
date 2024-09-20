@@ -20,7 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.thirsttap.R;
-import com.example.thirsttap.Login.LoginActivity;
+import com.example.thirsttap.Login.LoginFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
@@ -48,6 +48,7 @@ public class ForgotPasswordFragment1 extends Fragment {
         requestBtn.setOnClickListener(v -> {
             email = inputEmail.getText().toString().trim();
             if (!email.isEmpty()) {
+                requestBtn.setEnabled(false); // Disable the button initially
                 sendCode(email);
             } else {
                 Toast.makeText(getContext(), "Please enter an email address", Toast.LENGTH_SHORT).show();
@@ -55,7 +56,7 @@ public class ForgotPasswordFragment1 extends Fragment {
         });
 
         backBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            startActivity(new Intent(getActivity(), LoginFragment.class));
         });
 
         return view;
@@ -88,6 +89,7 @@ public class ForgotPasswordFragment1 extends Fragment {
                                     .commit();
                         } else {
                             Toast.makeText(getContext(), "Sending failed", Toast.LENGTH_SHORT).show();
+                            requestBtn.setEnabled(true);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

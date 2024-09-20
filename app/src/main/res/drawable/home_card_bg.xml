@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/rounded_corners.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Rounded corners shape with background -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp"
+                android:bottomRightRadius="20dp"
+                android:bottomLeftRadius="20dp" />
+            <solid android:color="#FFFFFF"/> <!-- Optional background color -->
+        </shape>
+    </item>
+
+    <!-- Bitmap clipped to the rounded corners -->
+    <item android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp">
+        <bitmap
+            android:src="@drawable/home_bg_card"
+            android:gravity="fill" />
+    </item>
+</layer-list>

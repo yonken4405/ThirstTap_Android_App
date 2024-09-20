@@ -32,10 +32,12 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.9.0' // for TabLayout
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.fragment:fragment:1.6.0'
     implementation libs.appcompat
@@ -47,7 +49,9 @@ dependencies {
     implementation libs.annotation
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.engage.core
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
 }

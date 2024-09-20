@@ -11,6 +11,7 @@ animationCoreAndroid = "1.6.8"
 annotation = "1.8.0"
 lifecycleLivedataKtx = "2.8.4"
 lifecycleViewmodelKtx = "2.8.4"
+engageCore = "1.5.5"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -24,6 +25,7 @@ animation-core-android = { group = "androidx.compose.animation", name = "animati
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

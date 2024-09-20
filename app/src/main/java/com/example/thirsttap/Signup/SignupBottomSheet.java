@@ -69,8 +69,6 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
         numLayout = view.findViewById(R.id.number_layout);
 
 
-
-
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -15,13 +15,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.AddressesPage.AddressActivity;
+import com.example.thirsttap.ClientOnBoarding.OnboardingActivity;
 import com.example.thirsttap.ForgotPassword.ForgotPasswordActivity;
 import com.example.thirsttap.MainActivity;
 import com.example.thirsttap.R;
+import com.example.thirsttap.Signup.EmailVerificationBottomSheet;
 import com.example.thirsttap.Signup.SignupBottomSheet;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
@@ -35,11 +39,12 @@ import java.util.Map;
 
 
 public class LoginBottomSheet extends BottomSheetDialogFragment {
-    TextInputEditText email, password;
-    Button loginBtn, googleBtn, forgotPassBtn;
-    TextView signUp;
-    String url_login = "https://scarlet2.io/Yankin/ThirstTap/login.php"; // Ensure this is correct
-    TextInputLayout loginPass, loginEmail;
+    private TextInputEditText email, password;
+    private Button loginBtn, googleBtn, forgotPassBtn;
+    private TextView signUp;
+    private String url_login = "https://scarlet2.io/Yankin/ThirstTap/login.php"; // Ensure this is correct
+    private String url_resendCode = "https://scarlet2.io/Yankin/ThirstTap/resendCode.php";
+    private TextInputLayout loginPass, loginEmail;
 
     @Nullable
     @Override
@@ -86,7 +91,12 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         });
 
         googleBtn.setOnClickListener(v -> {
-            // Handle Google login
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            getActivity().runOnUiThread(() -> {
+                startActivity(intent);
+                dismiss();
+            });
         });
 
         return view;
@@ -132,23 +142,55 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                                 String token = jsonResponse.getString("token");
                                 saveToken(token);
 
-                                // Start MainActivity
-                                if (getActivity() != null) {
-                                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    getActivity().runOnUiThread(() -> {
-                                        startActivity(intent);
-                                        dismiss();
-                                    });
+                                // Extract user data
+                                JSONObject userData = jsonResponse.getJSONObject("user_data");
+                                String userid = userData.getString("userid");
+                                String userEmail = userData.getString("email");
+                                String userName = userData.getString("name");
+                                String userPhoneNum = userData.getString("phone_num");
+                                boolean isNewUser = userData.getInt("is_new_user") == 1;
+
+                                // Save the user's profile data (consider using SharedPreferences or a database)
+                                saveUserProfile(userEmail, userName, userPhoneNum, userid, isNewUser);
+
+                                // Start the appropriate activity based on the user's status
+                                if (isNewUser) {
+                                    // Navigate to setup or onboarding screen for new users
+                                    if (getActivity() != null) {
+                                        updateIsNewUserStatus(userEmail);//update user status on database
+                                        Intent intent = new Intent(getActivity(), AddressActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        getActivity().runOnUiThread(() -> {
+                                            startActivity(intent);
+                                            dismiss();
+                                        });
+                                    }
+                                } else {
+                                    // Start MainActivity for returning users
+                                    if (getActivity() != null) {
+                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        getActivity().runOnUiThread(() -> {
+                                            startActivity(intent);
+                                            dismiss();
+                                        });
+                                    }
                                 }
                             } else {
                                 Log.d("LoginBottomSheet", "Token not found in response");
                             }
                         } else {
                             String message = jsonResponse.optString("message", "Authentication failed");
-                            // Set error state for password input
-                            loginPass.setErrorEnabled(true);
-                            loginPass.setError(message);
+                            // Check for specific unverified user message
+                            if (message.contains("Unverified user")) {
+                                dismiss();
+                                // Start VerificationActivity for unverified users
+                                showVerificationBottomSheet(email);
+                            } else {
+                                // Set error state for password input
+                                loginPass.setErrorEnabled(true);
+                                loginPass.setError(message);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -175,10 +217,107 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     }
 
 
+    private void saveUserProfile(String email, String name, String phoneNum, String userid, boolean isNewUser) {
+        // You can use SharedPreferences to store user profile data locally
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userid", userid);
+        editor.putString("email", email);
+        editor.putString("name", name);
+        editor.putString("phone_num", phoneNum);
+        editor.putString("isNewUser", String.valueOf(isNewUser));
+        editor.apply();
+    }
+
     private void saveToken(String token) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("auth_token", token);
         editor.apply();
     }
+
+    private void showVerificationBottomSheet(String email) {
+        if (getParentFragmentManager() != null) {
+            resendCode(email);
+            EmailVerificationBottomSheet verificationBottomSheet = EmailVerificationBottomSheet.newInstance(email);
+            verificationBottomSheet.show(getParentFragmentManager(), "EmailVerificationBottomSheet");
+        } else {
+            Log.e("SignupBottomSheet", "ParentFragmentManager is null");
+        }
+    }
+
+    private void resendCode(String email) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_resendCode,
+                response -> {
+
+                    Log.d("ResendCode", "Server response: " + response);
+
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.trim());
+                        if ("1".equals(jsonResponse.optString("success", "0"))) {
+                            Toast.makeText(getContext(), "Code resent successfully!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Resending failed", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                return params;
+            }
+        };
+
+
+
+        //limit resending for once every 5 secs. this disables triggering double sending of verification code
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                5000,  // Timeout in milliseconds
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Set this to 0 to disable retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateIsNewUserStatus(String email) {
+        String url_updateStatus = "https://scarlet2.io/Yankin/ThirstTap/updateUserStatus.php"; // Replace with your correct URL
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_updateStatus,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.trim());
+                        if (jsonResponse.getString("success").equals("1")) {
+                            // Successfully updated is_new_user
+                            Log.d("LoginBottomSheet", "is_new_user updated to 0");
+                        } else {
+                            Log.d("LoginBottomSheet", "Failed to update is_new_user");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Log.d("LoginBottomSheet", "Network error: " + error.getMessage());
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                return params;
+            }
+        };
+
+        // Add the request to the request queue
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
+
 }
