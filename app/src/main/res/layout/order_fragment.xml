@@ -4,9 +4,45 @@
     android:layout_height="match_parent"
     android:background="@color/BottomSheetBg"
     >
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:background="@color/BottomSheetBg"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@drawable/back_btn"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Select Order"
+            android:textColor="@color/blueFont"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="166dp"
+        android:elevation="4dp"
+        android:layout_width="180dp"
+        android:layout_height="146dp"
         android:src="@drawable/order_bubble1"
         android:scaleType="fitCenter"
         android:background="@null"
@@ -23,32 +59,26 @@
         />
 
     <ScrollView
+        android:layout_marginTop="80dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="620dp">
         
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Back Button -->
-            <ImageButton
-                android:id="@+id/back_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/back_btn" />
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp">
 
             <!-- Store Name -->
             <TextView
                 android:id="@+id/store_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:fontFamily="@font/nunito_black"
-                android:text="Stop and Quench"
+                android:text="Stop&amp;Quench"
                 android:textColor="@color/blueFont"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -313,6 +343,7 @@
                                 android:textSize="10sp" />
 
                             <TextView
+                                android:id="@+id/round_container_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
@@ -372,6 +403,7 @@
 
 
                             <TextView
+                                android:id="@+id/slim_container_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
@@ -381,14 +413,6 @@
 
 
                         </LinearLayout>
-
-
-
-
-
-
-
-
 
 
                         <RadioButton
@@ -438,6 +462,7 @@
                                 android:textSize="10sp" />
 
                             <TextView
+                                android:id="@+id/small_slim_container_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_bold"
@@ -597,8 +622,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:layout_height="41dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:gravity="center"
@@ -611,16 +635,17 @@
                         android:layout_height="match_parent"
                         android:background="@null"
                         android:src="@drawable/minus_ic"
-                       />
+                        android:padding="10dp"
+                        />
 
                     <TextView
                         android:id="@+id/counter_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:padding="5dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:textColor="@color/white"/>
 
                     <ImageButton
@@ -628,7 +653,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@null"
-                        android:src="@drawable/plus_ic"/>
+                        android:src="@drawable/plus_ic"
+                        android:padding="10dp"/>
 
 
                 </LinearLayout>

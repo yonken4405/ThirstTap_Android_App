@@ -1,52 +1,25 @@
 package com.example.thirsttap.AddressesPage;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,8 +34,9 @@ public class AddressViewModel extends AndroidViewModel {
         super(application);
         buildingAddresses = new MutableLiveData<>();
         houseAddresses = new MutableLiveData<>();
+        // Use application context for Volley request queue initialization
         requestQueue = Volley.newRequestQueue(application.getApplicationContext());
-        fetchAddresses();
+        fetchAddresses();  // You can call fetchAddresses here or trigger it from Fragment
     }
 
     public LiveData<List<BuildingAddress>> getBuildingAddresses() {
@@ -78,7 +52,8 @@ public class AddressViewModel extends AndroidViewModel {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    fetchAddresses(); // Refresh the address list
+                    // Refresh the addresses after updating the default address
+                    fetchAddresses();
                 },
                 error -> {
                     Log.e("VolleyError", "Error: " + error.getMessage());
@@ -96,7 +71,12 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void fetchAddresses() {
-        String url = "https://scarlet2.io/Yankin/ThirstTap/fetchAddress.php";
+        // Retrieve userId from SharedPreferences
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userid", "default_userid");
+
+        // Append userId to the URL as a query parameter
+        String url = "https://scarlet2.io/Yankin/ThirstTap/fetchAddress.php?userId=" + userId;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
@@ -131,6 +111,7 @@ public class AddressViewModel extends AndroidViewModel {
                                 ));
                             }
                         }
+                        // Update LiveData with the fetched data
                         buildingAddresses.setValue(buildings);
                         houseAddresses.setValue(houses);
                     } catch (JSONException e) {
@@ -142,6 +123,60 @@ public class AddressViewModel extends AndroidViewModel {
                 }
         );
 
+        // Add the request to the Volley request queue
         requestQueue.add(jsonArrayRequest);
     }
+
+    public void updateAddress(int addressId, String street, String building, String unit, String city, String postalCode) {
+        String url = "https://scarlet2.io/Yankin/ThirstTap/updateAddress.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    // Optionally handle the response
+                    Log.d("UpdateResponse", response);
+                    fetchAddresses(); // Refresh the addresses after updating
+                },
+                error -> {
+                    Log.e("VolleyError", "Error: " + error.getMessage());
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("address_id", String.valueOf(addressId));
+                params.put("street", street);
+                params.put("building", building);
+                params.put("unit", unit);
+                params.put("city", city);
+                params.put("postal_code", postalCode);
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void deleteAddress(int addressId) {
+        String url = "https://scarlet2.io/Yankin/ThirstTap/deleteAddress.php"; // Replace with your delete URL
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    // Optionally handle the response
+                    Log.d("DeleteResponse", response);
+                    fetchAddresses(); // Refresh the addresses after deletion
+                },
+                error -> {
+                    Log.e("VolleyError", "Error: " + error.getMessage());
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("address_id", String.valueOf(addressId));
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+
 }

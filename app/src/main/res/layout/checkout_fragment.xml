@@ -1,0 +1,376 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BottomSheetBg">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:background="@color/BottomSheetBg"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@drawable/back_btn"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Checkout"
+            android:textColor="@color/blueFont"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:elevation="4dp"
+        android:layout_width="200dp"
+        android:layout_height="166dp"
+        android:layout_gravity="right"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/order_bubble1" />
+
+    <ImageView
+        android:layout_width="216dp"
+        android:layout_height="315.3dp"
+        android:layout_gravity="left|center"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/order_bubble2" />
+
+    <ScrollView
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="620dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Order will be delivered by "
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/store_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_extrabold"
+                    android:text="Stop&amp;Quench"
+                    android:textColor="@color/blueFont"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/calendar_ic"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:gravity="center"
+                    android:src="@drawable/calendar_ic" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Select a delivery date"
+                    android:textColor="@color/blueFont"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/change_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="right"
+                    android:text="Change"
+                    android:textColor="@color/blueFont"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
+                android:text="09:00 AM - 05:00 PM"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/order_summary_background"
+                android:orientation="vertical"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:id="@+id/orderSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Order summary"
+                    android:textColor="@color/blueFont"
+                    android:textSize="14sp" />
+
+               <LinearLayout
+                   android:orientation="vertical"
+                   android:layout_below="@+id/orderSummary"
+                   android:id="@+id/order_summary_container"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   />
+
+                <Button
+                    android:layout_below="@+id/order_summary_container"
+                    android:id="@+id/add_order_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Add more items"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blueFont"
+                    android:textSize="11sp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/total_price_background"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:drawableStart="@drawable/payment_ic_24"
+                    android:drawablePadding="5dp"
+                    android:id="@+id/itemTotalTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Payment Details"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/merchTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Merchandise Subtotal"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₱"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/merchandise_subtotal_tv"
+                        android:gravity="right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="150"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/shipTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Shipping Subtotal"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₱"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/shipping_subtotal_tv"
+                        android:gravity="right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/feeTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Convenience Fee"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₱"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/convenience_fee_tv"
+                        android:gravity="right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="Total Payment"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₱"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/total_payment_tv"
+                        android:gravity="right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="250"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/place_order_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/blueFont"
+                android:fontFamily="@font/montserrat_semibold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Place Order"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+
+</FrameLayout>

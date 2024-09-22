@@ -2,7 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/BottomSheetBg" />
     <item android:gravity="center"
-        android:top="250dp">
+        android:width="360dp"
+        android:height="800dp">
         <bitmap android:src="@drawable/forgot_pass_bg3" />
     </item>
 

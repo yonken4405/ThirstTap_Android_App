@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#E9E9E9"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/order_water_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="Water Type"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/order_container_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/order_water_type"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="5.00 Gal Round Container"
+        android:textColor="@color/gray"
+        android:textSize="12sp" />
+
+
+    <LinearLayout
+        android:id="@+id/price_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/order_container_size"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Per container: ₱"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/order_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="25.00"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/price_new_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/price_container"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/container_status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="New container: ₱"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/new_container_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="100.00"
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="right"
+            android:text="₱"
+            android:textColor="@color/blueFont"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="right"
+            android:text="150.00"
+            android:textColor="@color/blueFont"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/calcu_border"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/minus_ic" />
+
+        <TextView
+            android:id="@+id/order_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/plus_ic" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/summary_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/price_new_container"
+        android:layout_marginTop="15dp"
+        android:background="#D1D0D0" />
+
+
+</RelativeLayout>

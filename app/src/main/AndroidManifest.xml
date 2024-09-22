@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity android:name=".ForgotPassword.ForgotPasswordActivity"
             android:exported="true" />
@@ -54,10 +54,6 @@
 
         <activity android:name=".AddressesPage.AddressActivity"
             />
-
-
-        <activity android:name=".OrderPage.OrderFragment"
-            android:exported="true"/>
 
 
 

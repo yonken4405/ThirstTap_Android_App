@@ -7,59 +7,62 @@
     android:outlineProvider="bounds"
     android:background="@color/BottomSheetBg">
 
-    <FrameLayout
-        android:id="@+id/frameLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/bubble_top_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bubble_top_left" />
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@drawable/back_btn"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/station_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="40dp"
-            android:background="@null"
-            android:src="@drawable/back_btn" />
-    </FrameLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Select Address"
+            android:textColor="@color/blueFont"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserrat_black"
-        android:text="Select Address"
-        android:textColor="@color/blueFont"
-        android:textSize="23sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
-        app:layout_constraintVertical_bias="0.007" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/blue_border"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4">
+        app:layout_constraintTop_toBottomOf="@+id/title_bar">
 
         <ImageView
             android:id="@+id/pin"
@@ -91,7 +94,6 @@
             android:textSize="11sp" />
 
     </RelativeLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:elevation="4dp"
@@ -135,8 +137,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/frameLayout2"
-        app:layout_constraintVertical_bias="0.944" />
+        app:layout_constraintTop_toTopOf="@+id/title_bar"
+        app:layout_constraintVertical_bias="0.845" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

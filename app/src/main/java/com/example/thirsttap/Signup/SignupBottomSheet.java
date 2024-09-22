@@ -160,7 +160,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             return false;
         } else if(!val.matches("(09)\\d{9}")){
             numLayout.setErrorEnabled(true);
-            numLayout.setError("Please enter a valid phone number");
+            numLayout.setError("Please enter a valid phone number (09XXXXXXXXX)");
             return false;
         }else {
             numLayout.setError(null);

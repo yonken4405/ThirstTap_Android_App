@@ -45,6 +45,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     private String url_login = "https://scarlet2.io/Yankin/ThirstTap/login.php"; // Ensure this is correct
     private String url_resendCode = "https://scarlet2.io/Yankin/ThirstTap/resendCode.php";
     private TextInputLayout loginPass, loginEmail;
+    private boolean isNewUser;
 
     @Nullable
     @Override
@@ -148,7 +149,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                                 String userEmail = userData.getString("email");
                                 String userName = userData.getString("name");
                                 String userPhoneNum = userData.getString("phone_num");
-                                boolean isNewUser = userData.getInt("is_new_user") == 1;
+                                isNewUser = userData.getInt("is_new_user") == 1;
 
                                 // Save the user's profile data (consider using SharedPreferences or a database)
                                 saveUserProfile(userEmail, userName, userPhoneNum, userid, isNewUser);
@@ -157,7 +158,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                                 if (isNewUser) {
                                     // Navigate to setup or onboarding screen for new users
                                     if (getActivity() != null) {
-                                        updateIsNewUserStatus(userEmail);//update user status on database
+                                        //updateIsNewUserStatus(userEmail);//update user status on database
                                         Intent intent = new Intent(getActivity(), AddressActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         getActivity().runOnUiThread(() -> {
@@ -216,7 +217,6 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         queue.add(stringRequest);
     }
 
-
     private void saveUserProfile(String email, String name, String phoneNum, String userid, boolean isNewUser) {
         // You can use SharedPreferences to store user profile data locally
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
@@ -225,9 +225,10 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         editor.putString("email", email);
         editor.putString("name", name);
         editor.putString("phone_num", phoneNum);
-        editor.putString("isNewUser", String.valueOf(isNewUser));
+        editor.putBoolean("isNewUser", isNewUser); // Save it as a boolean
         editor.apply();
     }
+
 
     private void saveToken(String token) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
@@ -287,37 +288,6 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         requestQueue.add(stringRequest);
     }
 
-    private void updateIsNewUserStatus(String email) {
-        String url_updateStatus = "https://scarlet2.io/Yankin/ThirstTap/updateUserStatus.php"; // Replace with your correct URL
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_updateStatus,
-                response -> {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response.trim());
-                        if (jsonResponse.getString("success").equals("1")) {
-                            // Successfully updated is_new_user
-                            Log.d("LoginBottomSheet", "is_new_user updated to 0");
-                        } else {
-                            Log.d("LoginBottomSheet", "Failed to update is_new_user");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> {
-                    Log.d("LoginBottomSheet", "Network error: " + error.getMessage());
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                return params;
-            }
-        };
-
-        // Add the request to the request queue
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-    }
 
 }

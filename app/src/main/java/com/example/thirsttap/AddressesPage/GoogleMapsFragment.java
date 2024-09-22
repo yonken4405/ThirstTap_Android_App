@@ -4,10 +4,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.thirsttap.HomePage.HomeFragment;
 import com.example.thirsttap.Login.LoginBottomSheet;
+import com.example.thirsttap.MainActivity;
 import com.example.thirsttap.R;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
@@ -45,6 +47,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -72,7 +75,9 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     private String state;
     private String postalCode;
     private String country;
-    String addressLine, house, additional, building, unit, street, barangay, structure;
+    private String addressLine, house, additional, building, unit, street, barangay, structure;
+    private boolean isNewUser;
+    private String email;
 
 
     @Nullable
@@ -85,10 +90,10 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         // Retrieve user profile data from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userid", "default_userid");
-        String email = sharedPreferences.getString("email", "default_email");
+        email = sharedPreferences.getString("email", "default_email");
         String name = sharedPreferences.getString("name", "default_name");
         String phoneNum = sharedPreferences.getString("phone_num", "default_phone_num");
-        boolean isNewUser = Boolean.parseBoolean(sharedPreferences.getString("isNewUser", "false"));
+        isNewUser = sharedPreferences.getBoolean("isNewUser", false);
 
         // Use the retrieved data
         Log.d("AnotherFragment", "UserID: " + userId);
@@ -409,11 +414,18 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                     sendAddressToServer(currentLatitude, currentLongitude, barangay, street, building, unit, house, additional);
                     bottomSheetDialog.dismiss();
 
-                    HomeFragment fragment = new HomeFragment();
-                    getParentFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .addToBackStack(null)
-                            .commit();
+                    if (isNewUser) {
+                        updateIsNewUserStatus(email); //update not a new user anymore
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        AddressListFragment fragment = new AddressListFragment();
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+
                 }
             });
 
@@ -434,7 +446,38 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         bottomSheetDialog.show();
     }
 
+    private void updateIsNewUserStatus(String email) {
+        String url_updateStatus = "https://scarlet2.io/Yankin/ThirstTap/updateUserStatus.php"; // Replace with your correct URL
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_updateStatus,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.trim());
+                        if (jsonResponse.getString("success").equals("1")) {
+                            // Successfully updated is_new_user
+                            Log.d("LoginBottomSheet", "is_new_user updated to 0");
+                        } else {
+                            Log.d("LoginBottomSheet", "Failed to update is_new_user");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Log.d("LoginBottomSheet", "Network error: " + error.getMessage());
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                return params;
+            }
+        };
+
+        // Add the request to the request queue
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
 
 
 

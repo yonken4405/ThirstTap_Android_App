@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingRight="30dp"
+    android:paddingLeft="30dp"
+    android:paddingBottom="30dp"
+    android:background="@drawable/rounded_botsheet">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:textColor="@color/blueFont"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/station_name"
+        android:fontFamily="@font/nunito_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shop Name"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/loc_map"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:textColor="@color/josiahBlack"
+            android:textSize="12sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/station_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Station Address"
+           />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/phone_map"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:textColor="@color/josiahBlack"
+            android:textSize="12sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/contact_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Station Phone Number"
+             />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/time_map"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:textColor="@color/josiahBlack"
+            android:textSize="12sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:id="@+id/opening_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Station Schedule"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/email_map"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:textColor="@color/josiahBlack"
+            android:textSize="12sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Station Email"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/order_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/blueFont"
+        android:fontFamily="@font/montserrat_semibold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Make an Order"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+
+</LinearLayout>

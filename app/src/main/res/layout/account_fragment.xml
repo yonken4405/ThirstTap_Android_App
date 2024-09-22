@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="172.22dp"
+        android:layout_height="226.87dp"
+        android:layout_gravity="end|top"
+        android:elevation="10dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/account_bubble1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/BottomSheetBg"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:id="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:background="@color/BottomSheetBg">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back_btn" />
+
+            <TextView
+                android:id="@+id/station_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="Account"
+                android:textColor="@color/blueFont"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/account_details_corners"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/profile_pic" />
+
+            <TextView
+                android:id="@id/name"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/profile_pic"
+                android:layout_weight="3"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Name"
+                android:textColor="@color/josiahBlack"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_toRightOf="@+id/profile_pic"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:text="user@example.com"
+                android:textColor="@color/josiahBlack"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/edit_button"
+                style="@style/GoogleBtn"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:layout_below="@+id/profile_pic"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Edit Account"
+                android:textAllCaps="false"
+                android:textColor="@color/blueFont"
+                android:textSize="12sp"
+                app:cornerRadius="10dp"
+                app:strokeWidth="1.5dp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/addresses_button"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:alpha="0.8"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/baseline_edit_location_alt_24"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="left|center"
+            android:text="Address Management"
+            android:textAllCaps="false"
+            android:textColor="@color/josiahBlack"
+            android:textSize="15sp"
+            app:cornerRadius="5dp"
+            app:iconPadding="15dp" />
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/legal_button"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:alpha="0.8"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/baseline_list_alt_24"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="left|center"
+            android:text="Terms and Conditions"
+            android:textAllCaps="false"
+            android:textColor="@color/josiahBlack"
+            android:textSize="15sp"
+            app:cornerRadius="5dp"
+            app:iconPadding="15dp" />
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/partner_button"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:alpha="0.8"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/baseline_handshake_24"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="left|center"
+            android:text="Join as supplier"
+            android:textAllCaps="false"
+            android:textColor="@color/josiahBlack"
+            android:textSize="15sp"
+            app:cornerRadius="5dp"
+            app:iconPadding="15dp" />
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:alpha="0.8"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/baseline_settings_24"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="left|center"
+            android:text="Settings"
+            android:textAllCaps="false"
+            android:textColor="@color/josiahBlack"
+            android:textSize="15sp"
+            app:cornerRadius="5dp"
+            app:iconPadding="15dp" />
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/signout_button"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:alpha="0.8"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/baseline_logout_24"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="left|center"
+            android:text="Sign Out"
+            android:textAllCaps="false"
+            android:textColor="@color/josiahBlack"
+            android:textSize="15sp"
+            app:cornerRadius="5dp"
+            app:iconPadding="15dp" />
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

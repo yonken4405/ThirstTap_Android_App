@@ -7,13 +7,18 @@
     android:background="@drawable/rounded_botsheet"
     android:id="@+id/bottom_sheet_layout">
 
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"/>
+
     <!-- Title for the bottom sheet -->
     <TextView
         android:textColor="@color/blueFont"
         android:id="@+id/location_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search the buildingAddress of delivery location"
+        android:text="Search for the delivery location"
         android:textSize="15sp"
         android:fontFamily="@font/nunito_extrabold"
         android:paddingBottom="8dp"/>

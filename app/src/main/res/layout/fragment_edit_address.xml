@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edit_street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Street" />
+
+    <EditText
+        android:id="@+id/edit_building"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Building" />
+
+    <EditText
+        android:id="@+id/edit_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Unit" />
+
+    <EditText
+        android:id="@+id/edit_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="City" />
+
+    <EditText
+        android:id="@+id/edit_postal_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Postal Code" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_gravity="end" />
+</LinearLayout>

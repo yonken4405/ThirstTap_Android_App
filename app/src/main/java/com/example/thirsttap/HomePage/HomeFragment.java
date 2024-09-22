@@ -1,22 +1,39 @@
 package com.example.thirsttap.HomePage;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.AddressesPage.Address;
 import com.example.thirsttap.AddressesPage.AddressListFragment;
 import com.example.thirsttap.OrderPage.OrderFragment;
+import com.example.thirsttap.OrderPage.StationSelection;
 import com.example.thirsttap.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class HomeFragment extends Fragment {
-    private ImageButton homeBtn, orderBtn, profileBtn;
+    Button orderNow;
+    TextView addressDisplay, nameDisplay;
+    String userId, email, name, phoneNum;
 
 
     @Nullable
@@ -25,35 +42,102 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.home_screen_fragment, container, false);
 
-        homeBtn = view.findViewById(R.id.home_btn);
-        orderBtn = view.findViewById(R.id.order_btn);
-        profileBtn = view.findViewById(R.id.profile_btn);
+        orderNow = view.findViewById(R.id.order_now_button);
+        addressDisplay = view.findViewById(R.id.address_display);
+        nameDisplay = view.findViewById(R.id.user_name);
 
-        profileBtn.setOnClickListener(new View.OnClickListener() {
+
+        // Retrieve user profile data from SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("userid", "default_userid");
+        email = sharedPreferences.getString("email", "default_email");
+        name = sharedPreferences.getString("name", "default_name");
+        phoneNum = sharedPreferences.getString("phone_num", "default_phone_num");
+        boolean isNewUser = sharedPreferences.getBoolean("isNewUser", false);
+        Log.d("userData", userId+" "+email+" "+ name +" "+phoneNum +" "+isNewUser);
+
+        fetchAddressDisplay();//set the address to the default one
+        nameDisplay.setText(name);
+
+
+        addressDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddressListFragment addressListFragment = new AddressListFragment();
-                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, addressListFragment).addToBackStack(null).commit();
+                AddressListFragment fragment = new AddressListFragment();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
             }
         });
 
-        orderBtn.setOnClickListener(new View.OnClickListener() {
+
+        orderNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), OrderFragment.class);
-                startActivity(intent);
-
+                StationSelection fragment = new StationSelection();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
             }
         });
-
-
-
-
 
 
 
         return view;
     }
+
+    public void fetchAddressDisplay() {
+        String url = "https://scarlet2.io/Yankin/ThirstTap/fetchDefaultAddress.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            // Assuming you get the following fields from the server response
+                            String barangay = jsonObject.getString("barangay");
+                            String street = jsonObject.getString("street");
+                            String building = jsonObject.getString("building");
+                            String unit = jsonObject.getString("unit");
+                            String houseNum = jsonObject.getString("house_num");
+                            String additional = jsonObject.getString("additional");
+                            String city = jsonObject.getString("city");
+                            String state = jsonObject.getString("state");
+                            String postal = jsonObject.getString("postal_code");
+
+                            // Create an Address object
+                            Address address = new Address(
+                                    barangay, street, building, unit, houseNum, additional, city, state, postal
+                            );
+
+                            // Format the address using the formatAddress method
+                            String formattedAddress = Address.defaultAddress(address);
+
+                            // Update the TextView with the formatted address
+                            addressDisplay.setText(formattedAddress);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("Response", response);
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", userId); // Pass user ID if necessary
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(getContext()).add(stringRequest);
+    }
+
 
 
 }
