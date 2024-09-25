@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ForgotPasswordFragment2 extends Fragment {
-    private String url_verify = "https://scarlet2.io/Yankin/ThirstTap/forgotPasswordVerify.php";
+    private String url_verify = "https://thirsttap.scarlet2.io/Backend/forgotPasswordVerify.php";
     private ImageButton backBtn;
     private Button verifyBtn;
     private EditText[] otpFields;

@@ -48,7 +48,7 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void updateDefaultAddress(int addressId, String addressType) {
-        String url = "https://scarlet2.io/Yankin/ThirstTap/updateDefaultAddress.php";
+        String url = "https://thirsttap.scarlet2.io/Backend/updateDefaultAddress.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {

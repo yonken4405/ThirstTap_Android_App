@@ -116,7 +116,7 @@ public class EditAccountFragment extends Fragment {
     }
 
     private void updateUserData(String email, String newEmail, String newName, String newPhoneNum){
-        String url = "https://scarlet2.io/Yankin/ThirstTap/updateUserData.php";
+        String url = "https://thirsttap.scarlet2.io/Backend/updateUserData.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     try {

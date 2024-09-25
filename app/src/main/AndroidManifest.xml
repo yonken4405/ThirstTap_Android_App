@@ -55,6 +55,9 @@
         <activity android:name=".AddressesPage.AddressActivity"
             />
 
+        <activity android:name=".OrderHistoryPage.OrderHistoryFragment"
+            android:exported="true" />
+
 
 
 

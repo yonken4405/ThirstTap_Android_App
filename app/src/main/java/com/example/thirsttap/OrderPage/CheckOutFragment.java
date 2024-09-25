@@ -59,7 +59,7 @@ public class CheckOutFragment extends Fragment {
     private String formattedDate2;
     private String userId, email, name, phoneNum;
     private TextView stationAddressTextView, stationNameTextView, stationScheduleTextView;
-    private String stationName, stationAddress, stationSchedule;
+    private String stationName, stationAddress, stationSchedule, stationId;
 
 
 
@@ -69,6 +69,7 @@ public class CheckOutFragment extends Fragment {
 
         orderItems = new ArrayList<>();
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+
         orderItemsLayout = view.findViewById(R.id.order_summary_container); // A LinearLayout where order items will be listed
 
         addOrderButton = view.findViewById(R.id.add_order_button);
@@ -77,6 +78,7 @@ public class CheckOutFragment extends Fragment {
         placeOrderBtn = view.findViewById(R.id.place_order_btn);
         changeDate = view.findViewById(R.id.change_btn);
         date = view.findViewById(R.id.date);
+        backBtn = view.findViewById(R.id.back_button);
 
 
         // Retrieve user profile data from SharedPreferences
@@ -85,25 +87,35 @@ public class CheckOutFragment extends Fragment {
         email = sharedPreferences.getString("email", "default_email");
         name = sharedPreferences.getString("name", "default_name");
         phoneNum = sharedPreferences.getString("phone_num", "default_phone_num");
-        boolean isNewUser = sharedPreferences.getBoolean("isNewUser", false);
 
 
-        // Retrieve the passed data from the Bundle
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            stationName = bundle.getString("station_name");
-            stationAddress = bundle.getString("station_address");
-            stationSchedule = bundle.getString("station_schedule");
 
-            // Display the station data on the UI
-            stationNameTextView = view.findViewById(R.id.store_name);
-            stationScheduleTextView = view.findViewById(R.id.time);
+        // Display the station data on the UI
+        stationNameTextView = view.findViewById(R.id.store_name);
+        stationScheduleTextView = view.findViewById(R.id.time);
 
-            //Set the name and address based on chosen station
-            stationNameTextView.setText(stationName);
+        orderViewModel.getStationName().observe(getViewLifecycleOwner(), value -> {
+            stationNameTextView.setText(value);
+            stationName = value;
+        });
+
+        orderViewModel.getStationSchedule().observe(getViewLifecycleOwner(), value -> {
             stationScheduleTextView.setText(stationSchedule);
+            stationSchedule = value;
+        });
 
-        }
+        orderViewModel.getStationAddress().observe(getViewLifecycleOwner(), value -> {
+            stationAddress = value;
+        });
+
+        orderViewModel.getStationId().observe(getViewLifecycleOwner(), value -> {
+            stationId = value;
+        });
+
+
+
+
+
 
         changeDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +177,8 @@ public class CheckOutFragment extends Fragment {
             }
 
             merchSubtotal.setText(String.valueOf(totalAmount));
+
+            totalAmount = totalAmount + 100;//100for the fees
             totalPayment.setText(String.valueOf(totalAmount));
         });
 
@@ -176,22 +190,37 @@ public class CheckOutFragment extends Fragment {
             transaction.commit();
         });
 
-        placeOrderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Check if the date has been selected
-                if (formattedDate2 == null || formattedDate2.isEmpty()) {
-                    // Show a message to the user to select a delivery date
-                    Toast.makeText(getContext(), "Please select a delivery date.", Toast.LENGTH_SHORT).show();
-                    return; // Prevent the order from being placed
+
+        try {
+            placeOrderBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Check if the date has been selected
+                    if (formattedDate2 == null || formattedDate2.isEmpty()) {
+                        // Show a message to the user to select a delivery date
+                        Toast.makeText(getContext(), "Please select a delivery date.", Toast.LENGTH_SHORT).show();
+                        return; // Prevent the order from being placed
+                    }
+
+
+                    // If the date is selected, proceed with placing the order
+                    Log.d("CheckOutFragment", "Number of order items: " + orderViewModel.getOrderItems().getValue().size());
+
+                    createOrder();  // Call the method to place the order
                 }
+            });
 
-                // If the date is selected, proceed with placing the order
-                Log.d("CheckOutFragment", "Number of order items: " + orderViewModel.getOrderItems().getValue().size());
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OrderFragment fragment = new OrderFragment();
+                    getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                }
+            });
 
-                createOrder();  // Call the method to place the order
-            }
-        });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 
         return view;
@@ -239,17 +268,19 @@ public class CheckOutFragment extends Fragment {
     private void createOrder() {
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
-        String url = "https://scarlet2.io/Yankin/ThirstTap/createOrder.php";
+        String url = "https://thirsttap.scarlet2.io/Backend/createOrder.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+                        Log.d("response checkout", response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "Error placing order!", Toast.LENGTH_SHORT).show();
+                Log.d("response checkout", String.valueOf(error));
             }
         }) {
             @Override
@@ -257,6 +288,8 @@ public class CheckOutFragment extends Fragment {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", userId);
                 params.put("delivery_date", formattedDate2);
+                params.put("station_name", stationName);
+                params.put("station_id", stationId); // Use totalPriceToPay here as well
                 // Calculate totalPriceToPay here
                 totalPriceToPay = totalAmount + 100;
                 params.put("total_price", String.valueOf(totalPriceToPay)); // Use totalPriceToPay here
@@ -272,6 +305,9 @@ public class CheckOutFragment extends Fragment {
                             orderItem.put("quantity", item.getQuantity());
                             orderItem.put("is_new_container", item.getNewContainerPrice() != 0);
                             orderItem.put("total_price", String.valueOf(totalPriceToPay)); // Use totalPriceToPay here as well
+
+
+
                             orderItemsArray.put(orderItem);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -291,6 +327,7 @@ public class CheckOutFragment extends Fragment {
 
 
 
+
     private void initializeItemView(OrderItem item, TextView quantityTextView, TextView totalPriceTextView) {
         // Set up the item view with initial values
         quantityTextView.setText(String.valueOf(item.getQuantity()));
@@ -305,6 +342,7 @@ public class CheckOutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 count[0] += 1; // Increment count
+                item.setQuantity(count[0]); // Update the quantity in the OrderItem object
                 quantityTextView.setText(String.valueOf(count[0])); // Update displayed quantity
 
                 double pricePerItem = item.getPricePerItem() + item.getNewContainerPrice(); // Get price
@@ -324,6 +362,7 @@ public class CheckOutFragment extends Fragment {
                     double pricePerItem = item.getPricePerItem() + item.getNewContainerPrice(); // Get price
 
                     count[0] -= 1; // Decrement count
+                    item.setQuantity(count[0]); // Update the quantity in the OrderItem object
                     quantityTextView.setText(String.valueOf(count[0])); // Update displayed quantity
 
                     double updatedPrice = pricePerItem * count[0]; // Calculate updated price
@@ -336,6 +375,7 @@ public class CheckOutFragment extends Fragment {
             }
         });
     }
+
 
 
     private void updateSubtotal() {

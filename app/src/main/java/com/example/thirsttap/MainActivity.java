@@ -1,5 +1,6 @@
 package com.example.thirsttap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowInsets;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.thirsttap.AccountPage.AccountFragment;
 import com.example.thirsttap.AddressesPage.AddressListFragment;
 import com.example.thirsttap.HomePage.HomeFragment;
+import com.example.thirsttap.OrderHistoryPage.Order;
+import com.example.thirsttap.OrderHistoryPage.OrderHistoryFragment;
 import com.example.thirsttap.OrderPage.OrderFragment;
 import com.example.thirsttap.OrderPage.StationSelection;
 
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         history.setOnClickListener(v -> {
             animateSelected(history);
-            StationSelection fragment = new StationSelection();
+            OrderHistoryFragment fragment = new OrderHistoryFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
         });
 

@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void fetchAddressDisplay() {
-        String url = "https://scarlet2.io/Yankin/ThirstTap/fetchDefaultAddress.php";
+        String url = "https://thirsttap.scarlet2.io/Backend/fetchDefaultAddress.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

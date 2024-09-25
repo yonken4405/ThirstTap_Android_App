@@ -65,7 +65,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     private TextView loc;
     private Marker currentMarker;
     private String userId; // Example user ID
-    private String url = "https://scarlet2.io/Yankin/ThirstTap/store_address.php";
+    private String url = "https://thirsttap.scarlet2.io/Backend/store_address.php";
 
     // Variables to store address details
     private double currentLatitude;
@@ -245,8 +245,8 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
 
         // Create a request body
         Map<String, String> params = new HashMap<>();
-        params.put("latitude", String.format(Locale.US, "%.6f", latitude));
-        params.put("longitude", String.format(Locale.US, "%.6f", longitude));
+        params.put("latitude", String.format(Locale.US, "%.8f", latitude));
+        params.put("longitude", String.format(Locale.US, "%.8f", longitude));
         params.put("barangay", barangay);
         params.put("street", street);
         params.put("building", building);
@@ -297,6 +297,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         };
 
         Log.d("GoogleMaps", "Sending latitude: " + latitude + ", longitude: " + longitude);
+        Log.d("CheckOutFragment", "Params: " + params.toString());
 
         // Add the request to the RequestQueue
         requestQueue.add(stringRequest);
@@ -447,7 +448,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void updateIsNewUserStatus(String email) {
-        String url_updateStatus = "https://scarlet2.io/Yankin/ThirstTap/updateUserStatus.php"; // Replace with your correct URL
+        String url_updateStatus = "https://thirsttap.scarlet2.io/Backend/updateUserStatus.php"; // Replace with your correct URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_updateStatus,
                 response -> {

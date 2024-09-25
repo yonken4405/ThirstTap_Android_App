@@ -2,6 +2,7 @@ package com.example.thirsttap.OrderPage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.thirsttap.HomePage.HomeFragment;
 import com.example.thirsttap.MainActivity;
@@ -32,11 +34,14 @@ public class OrderFragment extends Fragment {
     private double gallonPrice, newContainerPrice;
     private OrderViewModel orderViewModel;
     private TextView stationAddressTextView, stationNameTextView;
-    private String stationName, stationAddress, stationSchedule;
+    private String stationName, stationAddress, stationSchedule, stationId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.order_fragment, container, false);
+        // Initialize the ViewModel
+        orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+
 
         proceedBtn = view.findViewById(R.id.proceed_button);
         backBtn = view.findViewById(R.id.back_button);
@@ -55,22 +60,45 @@ public class OrderFragment extends Fragment {
         RadioButton titleAlkaline = view.findViewById(R.id.radio_alkaline);
         RadioButton titleDistilled = view.findViewById(R.id.radio_distilled);
 
-        // Retrieve the passed data from the Bundle
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            stationName = bundle.getString("station_name");
-            stationAddress = bundle.getString("station_address");
-            stationSchedule = bundle.getString("station_schedule");
+//        // Retrieve the passed data from the Bundle
+//        Bundle bundle = getArguments();
+//        if (bundle != null) {
+//            stationName = bundle.getString("station_name");
+//            stationAddress = bundle.getString("station_address");
+//            stationSchedule = bundle.getString("station_schedule");
+//            stationId = bundle.getString("station_id");
+//
+//            // Display the station data on the UI
+//            stationNameTextView = view.findViewById(R.id.store_name);
+//            stationAddressTextView = view.findViewById(R.id.store_address);
+//
+//            //Set the name and address based on chosen station
+//            stationNameTextView.setText(stationName);
+//            stationAddressTextView.setText(stationAddress);
+//
+//        }
 
-            // Display the station data on the UI
-            stationNameTextView = view.findViewById(R.id.store_name);
-            stationAddressTextView = view.findViewById(R.id.store_address);
+        // Display the station data on the UI
+        stationNameTextView = view.findViewById(R.id.store_name);
+        stationAddressTextView = view.findViewById(R.id.store_address);
 
-            //Set the name and address based on chosen station
-            stationNameTextView.setText(stationName);
-            stationAddressTextView.setText(stationAddress);
+        orderViewModel.getStationName().observe(getViewLifecycleOwner(), value -> {
+            stationNameTextView.setText(value);
+            stationName = value;
+        });
 
-        }
+        orderViewModel.getStationSchedule().observe(getViewLifecycleOwner(), value -> {
+            stationSchedule = value;
+        });
+
+        orderViewModel.getStationAddress().observe(getViewLifecycleOwner(), value -> {
+            stationAddressTextView.setText(value);
+            stationAddress = value;
+        });
+
+        orderViewModel.getStationId().observe(getViewLifecycleOwner(), value -> {
+            stationId = value;
+        });
 
 
         waterTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -220,6 +248,8 @@ public class OrderFragment extends Fragment {
                 bundle.putString("station_name", stationName); // Station Name
                 bundle.putString("station_address", stationAddress); // Station Address
                 bundle.putString("station_schedule", stationSchedule); // Station Opening Hours
+                bundle.putString("station_id", stationId); // Station Id
+
 
                 // Proceed to the checkout fragment
                 CheckOutFragment fragment = new CheckOutFragment();
@@ -231,6 +261,8 @@ public class OrderFragment extends Fragment {
 
         return view;
     }
+
+
 
 
 }

@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class ForgotPasswordFragment3 extends Fragment {
 
-    private String url_verify = "https://scarlet2.io/Yankin/ThirstTap/forgotPasswordReset.php";
+    private String url_verify = "https://thirsttap.scarlet2.io/Backend/forgotPasswordReset.php";
     private ImageButton backBtn;
     private Button saveBtn;
     private String email, password;

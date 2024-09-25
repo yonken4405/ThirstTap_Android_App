@@ -16,6 +16,11 @@ public class OrderViewModel extends ViewModel {
     private static final MutableLiveData<Double> newContainerPrice = new MutableLiveData<>();
     private static final MutableLiveData<List<OrderItem>> orderItems = new MutableLiveData<>(new ArrayList<>());
 
+    private MutableLiveData<String> stationName = new MutableLiveData<>();
+    private MutableLiveData<String> stationAddress = new MutableLiveData<>();
+    private MutableLiveData<String> stationSchedule = new MutableLiveData<>();
+    private MutableLiveData<String> stationId = new MutableLiveData<>();
+
     // Method to add a new order item
     public static void addOrderItem(OrderItem orderItem) {
         List<OrderItem> currentList = orderItems.getValue();
@@ -23,6 +28,30 @@ public class OrderViewModel extends ViewModel {
             currentList.add(orderItem);
             orderItems.setValue(currentList);  // Update the list in LiveData
         }
+    }
+
+    // Getter and Setter methods for station data
+    public void setStationData(String name, String address, String schedule, String id) {
+        stationName.setValue(name);
+        stationAddress.setValue(address);
+        stationSchedule.setValue(schedule);
+        stationId.setValue(id);
+    }
+
+    public LiveData<String> getStationName() {
+        return stationName;
+    }
+
+    public LiveData<String> getStationAddress() {
+        return stationAddress;
+    }
+
+    public LiveData<String> getStationSchedule() {
+        return stationSchedule;
+    }
+
+    public LiveData<String> getStationId() {
+        return stationId;
     }
 
 

@@ -55,8 +55,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_BUILDING) {
             BuildingAddress buildingAddress = buildingAddressList.get(position);
-            holder.streetTextView.setText(buildingAddress.getStreet() + ", " + buildingAddress.getBuildingName() + ", " + buildingAddress.getUnitNumber());
-            holder.cityTextView.setText(buildingAddress.getCity() + ", " + buildingAddress.getPostalCode());
+            holder.streetTextView.setText(buildingAddress.getStreet() + ", " + buildingAddress.getBuildingName() + ", " + buildingAddress.getUnitNumber()+ ", " +buildingAddress.getCity() + ", " + buildingAddress.getPostalCode());
+
             holder.defaultTextView.setVisibility(buildingAddress.isDefault() ? View.VISIBLE : View.GONE);
 
             holder.itemView.setOnClickListener(v -> {
@@ -72,8 +72,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
             });
         } else {
             HouseAddress houseAddress = houseAddressList.get(position - buildingAddressList.size());
-            holder.streetTextView.setText(houseAddress.getStreet() + ", " + houseAddress.getHouseNumber());
-            holder.cityTextView.setText(houseAddress.getCity() + ", " + houseAddress.getPostalCode());
+            holder.streetTextView.setText(houseAddress.getStreet() + ", " + houseAddress.getHouseNumber()+ ", " +houseAddress.getCity() + ", " + houseAddress.getPostalCode());
+
             holder.defaultTextView.setVisibility(houseAddress.isDefault() ? View.VISIBLE : View.GONE);
 
             holder.itemView.setOnClickListener(v -> {
@@ -110,7 +110,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             streetTextView = itemView.findViewById(R.id.address_street);
-            cityTextView = itemView.findViewById(R.id.address_city);
+            //cityTextView = itemView.findViewById(R.id.address_city);
             defaultTextView = itemView.findViewById(R.id.address_default);
             editBtn = itemView.findViewById(R.id.edit_btn);
             deleteBtn = itemView.findViewById(R.id.delete_btn);

@@ -41,7 +41,7 @@
     <TextView
         android:layout_marginHorizontal="16dp"
         android:id="@+id/address_display"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat_semibold"
@@ -82,7 +82,7 @@
         <TextView
             android:id="@+id/user_name"
             android:fontFamily="@font/montserrat_bold"
-            android:layout_width="wrap_content"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:text="Your Name"
             android:textColor="@color/blueFont"

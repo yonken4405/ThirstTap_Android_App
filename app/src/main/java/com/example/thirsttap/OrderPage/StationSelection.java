@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 
@@ -55,9 +56,10 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker currentMarker;
-    private String stationAddress,stationName;
+    private String stationAddress,stationName, stationId;
     private String userId, email, name, phoneNum;
     private Button orderButton;
+    OrderViewModel orderViewModel;
 
 
     @Nullable
@@ -65,6 +67,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_station_selection, container, false);
 
+        orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
 
         // Retrieve user profile data from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
@@ -138,7 +141,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
 
 
     private void fetchStations() {
-        String stationUrl = "https://scarlet2.io/Yankin/ThirstTap/fetchStations.php"; // Replace with your actual URL
+        String stationUrl = "https://thirsttap.scarlet2.io/Backend/fetchStations.php"; // Replace with your actual URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, stationUrl,
                 response -> {
@@ -153,7 +156,8 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
                             String contactNumber = station.getString("contact_number");
                             String email = station.getString("email");
                             String openingHours = station.getString("opening_hours");
-                            addStationMarkers(latitude, longitude, stationName, stationAddress, contactNumber, email, openingHours);
+                            stationId = station.getString("station_id");
+                            addStationMarkers(latitude, longitude, stationName, stationAddress, contactNumber, email, openingHours, stationId);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -171,14 +175,14 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         requestQueue.add(stringRequest);
     }
 
-    private void addStationMarkers(double latitude, double longitude, String stationName, String stationAddress, String contactNumber, String email, String openingHours) {
+    private void addStationMarkers(double latitude, double longitude, String stationName, String stationAddress, String contactNumber, String email, String openingHours, String stationId) {
         LatLng stationLocation = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(stationLocation)
                 .title(stationName);
 
         Marker marker = googleMap.addMarker(markerOptions);
-        marker.setTag(new String[]{stationName, stationAddress, contactNumber, email, openingHours}); // Store additional data
+        marker.setTag(new String[]{stationName, stationAddress, contactNumber, email, openingHours, stationId}); // Store additional data
     }
 
 
@@ -205,15 +209,30 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         orderButton = view.findViewById(R.id.order_button);
         orderButton.setOnClickListener(v -> {
 
-            // Prepare the station details to pass to the next fragment
-            Bundle bundle = new Bundle();
-            bundle.putString("station_name", stationDetails[0]); // Station Name
-            bundle.putString("station_address", stationDetails[1]); // Station Address
-            bundle.putString("station_schedule", stationDetails[4]); // Station Opening Hours
+//            // Prepare the station details to pass to the next fragment
+//            Bundle bundle = new Bundle();
+//            bundle.putString("station_name", stationDetails[0]); // Station Name
+//            bundle.putString("station_address", stationDetails[1]); // Station Address
+//            bundle.putString("station_schedule", stationDetails[4]); // Station Opening Hours
+//            bundle.putString("station_id", stationDetails[5]); // Station Id
+
+            if (orderViewModel != null) {
+                orderViewModel.setStationData(stationDetails[0], stationDetails[1], stationDetails[4], stationDetails[5]);
+            } else {
+                // Handle the case where orderViewModel is null
+                Log.e("StationSelection", "OrderViewModel is null");
+            }
+
+
+
+
+
+
+            Log.d("stationselect stationid", stationDetails[5]);
 
             // Create and set up the OrderFragment
             OrderFragment fragment = new OrderFragment();
-            fragment.setArguments(bundle); // Pass the bundle to OrderFragment
+            //fragment.setArguments(bundle); // Pass the bundle to OrderFragment
             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
 
             stationDetailsDialog.dismiss(); // Dismiss the dialog after navigating

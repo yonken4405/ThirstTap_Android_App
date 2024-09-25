@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ForgotPasswordFragment1 extends Fragment {
-    private String url_sendCode = "https://scarlet2.io/Yankin/ThirstTap/forgotPasswordCode.php";
+    private String url_sendCode = "https://thirsttap.scarlet2.io/Backend/forgotPasswordCode.php";
     private Button requestBtn;
     private TextInputEditText inputEmail;
     private ImageButton backBtn;

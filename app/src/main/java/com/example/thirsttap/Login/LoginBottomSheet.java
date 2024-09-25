@@ -42,8 +42,8 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     private TextInputEditText email, password;
     private Button loginBtn, googleBtn, forgotPassBtn;
     private TextView signUp;
-    private String url_login = "https://scarlet2.io/Yankin/ThirstTap/login.php"; // Ensure this is correct
-    private String url_resendCode = "https://scarlet2.io/Yankin/ThirstTap/resendCode.php";
+    private String url_login = "https://thirsttap.scarlet2.io/Backend/login.php"; // Ensure this is correct
+    private String url_resendCode = "https://thirsttap.scarlet2.io/Backend/resendCode.php";
     private TextInputLayout loginPass, loginEmail;
     private boolean isNewUser;
 
@@ -134,7 +134,6 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                 response -> {
                     Log.d("LoginBottomSheet", "Server response: " + response);
                     try {
-                        // Directly parse the response as JSON
                         JSONObject jsonResponse = new JSONObject(response);
                         String success = jsonResponse.getString("success");
 
@@ -149,33 +148,25 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                                 String userEmail = userData.getString("email");
                                 String userName = userData.getString("name");
                                 String userPhoneNum = userData.getString("phone_num");
+                                // Parse is_new_user as a boolean
                                 isNewUser = userData.getInt("is_new_user") == 1;
 
-                                // Save the user's profile data (consider using SharedPreferences or a database)
+                                // Save the user's profile data
                                 saveUserProfile(userEmail, userName, userPhoneNum, userid, isNewUser);
 
                                 // Start the appropriate activity based on the user's status
                                 if (isNewUser) {
                                     // Navigate to setup or onboarding screen for new users
-                                    if (getActivity() != null) {
-                                        //updateIsNewUserStatus(userEmail);//update user status on database
-                                        Intent intent = new Intent(getActivity(), AddressActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        getActivity().runOnUiThread(() -> {
-                                            startActivity(intent);
-                                            dismiss();
-                                        });
-                                    }
+                                    Intent intent = new Intent(getActivity(), AddressActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    dismiss();
                                 } else {
                                     // Start MainActivity for returning users
-                                    if (getActivity() != null) {
-                                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        getActivity().runOnUiThread(() -> {
-                                            startActivity(intent);
-                                            dismiss();
-                                        });
-                                    }
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    dismiss();
                                 }
                             } else {
                                 Log.d("LoginBottomSheet", "Token not found in response");
@@ -185,10 +176,8 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                             // Check for specific unverified user message
                             if (message.contains("Unverified user")) {
                                 dismiss();
-                                // Start VerificationActivity for unverified users
                                 showVerificationBottomSheet(email);
                             } else {
-                                // Set error state for password input
                                 loginPass.setErrorEnabled(true);
                                 loginPass.setError(message);
                             }
@@ -200,7 +189,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                 },
                 error -> {
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    error.printStackTrace(); // Print stack trace for debugging
+                    error.printStackTrace();
                 }
         ) {
             @Override
@@ -216,6 +205,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         RequestQueue queue = Volley.newRequestQueue(getContext());
         queue.add(stringRequest);
     }
+
 
     private void saveUserProfile(String email, String name, String phoneNum, String userid, boolean isNewUser) {
         // You can use SharedPreferences to store user profile data locally
