@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,13 +39,16 @@ public class ForgotPasswordFragment3 extends Fragment {
     private ImageButton backBtn;
     private Button saveBtn;
     private String email, password;
-    TextInputEditText pass, confirmPass;
-    TextInputLayout passError, conPassError;
+    private TextInputEditText pass, confirmPass;
+    private TextInputLayout passError, conPassError;
+    private ProgressBar loader;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forgot_pass_layout3, container, false);
+        loader = view.findViewById(R.id.loader);
 
         backBtn = view.findViewById(R.id.back_button);
         saveBtn = view.findViewById(R.id.save_button);
@@ -80,8 +84,10 @@ public class ForgotPasswordFragment3 extends Fragment {
     }
 
     private void resetPassword(String email, String password) {
+        loader.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_verify,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
                         if ("1".equals(jsonResponse.optString("success", "0"))) {
@@ -97,6 +103,7 @@ public class ForgotPasswordFragment3 extends Fragment {
                     }
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }) {
 

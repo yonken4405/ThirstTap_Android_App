@@ -9,11 +9,12 @@ public class BuildingAddress {
     private String postalCode;
     private boolean isDefault;
     private int addressId; // Use address_id
+    private String barangay;
 
     // Constructor
     public BuildingAddress(String street, String buildingName, String unitNumber,
                            String additionalInfo, String city, String postalCode,
-                           boolean isDefault, int addressId) {
+                           boolean isDefault, int addressId, String barangay) {
         this.street = street;
         this.buildingName = buildingName;
         this.unitNumber = unitNumber;
@@ -22,6 +23,7 @@ public class BuildingAddress {
         this.postalCode = postalCode;
         this.isDefault = isDefault;
         this.addressId = addressId;
+        this.barangay = barangay;
     }
 
 
@@ -34,6 +36,7 @@ public class BuildingAddress {
     public String getCity() { return city; }
     public String getPostalCode() { return postalCode; }
     public boolean isDefault() { return isDefault; }
+    public String getBarangay() { return barangay; }
 
     // Setters
     public void setStreet(String street) { this.street = street; }
@@ -43,6 +46,7 @@ public class BuildingAddress {
     public void setCity(String city) { this.city = city; }
     public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
     public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
+    public void setBarangay(String barangay) { this.barangay = barangay; }
 
     @Override
     public String toString() {

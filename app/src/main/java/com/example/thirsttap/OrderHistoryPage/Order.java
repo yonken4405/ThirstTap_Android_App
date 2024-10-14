@@ -6,14 +6,25 @@ public class Order {
     private String amount;
     private String customerName;
     private String deliveryDate;
+    private String deliveryAddress;
 
     // Constructor
-    public Order(String orderStatus, String orderId, String amount, String customerName, String deliveryDate) {
+    public Order(String orderStatus, String orderId, String amount, String customerName, String deliveryDate, String deliveryAddress) {
         this.orderStatus = orderStatus;
         this.orderId = orderId;
         this.amount = amount;
         this.customerName = customerName;
         this.deliveryDate = deliveryDate;
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    // Getters and Setters
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     // Getters and Setters

@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     android:background="@drawable/centered_forgot_pass_bg">
 
+
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/BottomSheetBg"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/back_button"
         android:layout_width="30dp"
@@ -158,7 +173,8 @@
             android:text="Verify"
             android:textAllCaps="false"
             android:textColor="@color/blueFont"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:elevation="2dp"/>
 
     </LinearLayout>
 

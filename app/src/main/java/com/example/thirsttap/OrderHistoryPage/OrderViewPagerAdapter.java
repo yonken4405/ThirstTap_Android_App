@@ -2,7 +2,6 @@ package com.example.thirsttap.OrderHistoryPage;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class OrderViewPagerAdapter extends FragmentStateAdapter {
@@ -22,7 +21,7 @@ public class OrderViewPagerAdapter extends FragmentStateAdapter {
             case 2:
                 return new CompletedOrdersFragment();
             case 3:
-                return new CanceledOrdersFragment();
+                return new CancelledOrdersFragment();
             default:
                 return new PendingOrdersFragment();
         }

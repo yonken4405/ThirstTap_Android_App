@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@drawable/rounded_botsheet">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/feedbackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How was your experience?"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/blueFont"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:numStars="5"
+            android:progressTint="@color/blueFont"
+            android:secondaryProgressTint="@color/blueFont"
+            android:stepSize="1" />
+
+        <TextView
+            android:id="@+id/feedbackPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tell us what can be improved"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/montserrat_semibold"
+            android:textColor="@color/gray"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/feedback_layout"
+            style="@style/TextInputLayoutColors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Tell us how we can improve..."
+            android:textColorHint="@color/InputText"
+            app:boxStrokeErrorColor="@color/red"
+            app:errorEnabled="false"
+            app:errorIconDrawable="@null"
+            app:errorTextColor="@color/red">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/feedbackText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:gravity="top|start" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/submitFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingHorizontal="30dp"
+            android:layout_marginVertical="30dp"
+            android:backgroundTint="@color/blueFont"
+            android:fontFamily="@font/montserrat_semibold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Submit Feedback"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:elevation="2dp"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/blueFont"
+        android:visibility="gone" />
+
+
+
+
+</FrameLayout>

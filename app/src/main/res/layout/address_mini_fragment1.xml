@@ -59,6 +59,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:visibility="gone"
         android:layout_marginTop="15dp"
         android:id="@+id/additional_layout"
         style="@style/TextInputLayoutColors"

@@ -1,6 +1,7 @@
 package com.example.thirsttap.ClientOnBoarding;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -28,8 +29,16 @@ public class SplashScreen extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        int color = getResources().getColor(R.color.blueFont);
+
+        // Optionally, you can make sure the status bar color remains black
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(color);
+        }
+
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +47,15 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     private String url_resendCode = "https://thirsttap.scarlet2.io/Backend/resendCode.php";
     private TextInputLayout loginPass, loginEmail;
     private boolean isNewUser;
+    private ProgressBar loader;
+
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_layout, container, false);
+        loader = view.findViewById(R.id.loader);
 
         email = view.findViewById(R.id.email);
         password = view.findViewById(R.id.password);
@@ -130,8 +135,11 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void authenticateUser(String email, String password) {
+        loader.setVisibility(View.VISIBLE);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_login,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     Log.d("LoginBottomSheet", "Server response: " + response);
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
@@ -188,6 +196,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
                     }
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     error.printStackTrace();
                 }
@@ -230,7 +239,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     private void showVerificationBottomSheet(String email) {
         if (getParentFragmentManager() != null) {
             resendCode(email);
-            EmailVerificationBottomSheet verificationBottomSheet = EmailVerificationBottomSheet.newInstance(email);
+            EmailVerificationBottomSheet verificationBottomSheet = EmailVerificationBottomSheet.newInstance(email, "forgotPassword");
             verificationBottomSheet.show(getParentFragmentManager(), "EmailVerificationBottomSheet");
         } else {
             Log.e("SignupBottomSheet", "ParentFragmentManager is null");
@@ -238,26 +247,33 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void resendCode(String email) {
+        loader.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_resendCode,
                 response -> {
-
+                    loader.setVisibility(View.GONE);
                     Log.d("ResendCode", "Server response: " + response);
 
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
                         if ("1".equals(jsonResponse.optString("success", "0"))) {
-                            Toast.makeText(getContext(), "Code resent successfully!", Toast.LENGTH_SHORT).show();
+                            if (isAdded()) { // Check if fragment is added to its activity
+                                Toast.makeText(getContext(), "Code resent successfully!", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getContext(), "Resending failed", Toast.LENGTH_SHORT).show();
+                            if (isAdded()) {
+                                Toast.makeText(getContext(), "Resending failed", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 },
                 error -> {
-                    Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    loader.setVisibility(View.GONE);
+                    if (isAdded()) {
+                        Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }) {
-
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -266,9 +282,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
             }
         };
 
-
-
-        //limit resending for once every 5 secs. this disables triggering double sending of verification code
+        // Limit resending for once every 5 secs.
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 5000,  // Timeout in milliseconds
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Set this to 0 to disable retries
@@ -277,6 +291,7 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
     }
+
 
 
 

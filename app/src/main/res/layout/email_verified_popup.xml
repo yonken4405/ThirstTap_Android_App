@@ -50,6 +50,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="13sp"
-        app:cornerRadius="10dp" />
+        app:cornerRadius="10dp"
+        android:elevation="2dp"/>
 
 </LinearLayout>

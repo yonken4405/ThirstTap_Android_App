@@ -1,15 +1,21 @@
 package com.example.thirsttap.OrderHistoryPage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.thirsttap.AccountPage.AccountFragment;
+import com.example.thirsttap.HomePage.HomeFragment;
+import com.example.thirsttap.MainActivity;
+import com.example.thirsttap.OrderPage.CheckOutFragment;
 import com.example.thirsttap.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -19,6 +25,7 @@ public class OrderHistoryFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private OrderViewPagerAdapter viewPagerAdapter;
+    private ImageButton backBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +36,8 @@ public class OrderHistoryFragment extends Fragment {
 
         viewPagerAdapter = new OrderViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+
+        backBtn = view.findViewById(R.id.back_button);
 
         new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -49,6 +58,11 @@ public class OrderHistoryFragment extends Fragment {
                 }
             }
         }).attach();
+
+        backBtn.setOnClickListener(v -> {
+            HomeFragment fragment = new HomeFragment();
+            getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+        });
 
         return view;
     }

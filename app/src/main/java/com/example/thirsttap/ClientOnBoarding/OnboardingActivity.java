@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.*;
 
+import com.example.thirsttap.AccountPage.TermsAndConditionsFragment;
 import com.example.thirsttap.Login.LoginFragment;
 import com.example.thirsttap.R;
 
@@ -43,6 +44,8 @@ public class OnboardingActivity extends AppCompatActivity {
                         return OnboardingPageFragment.newInstance("Your trusted supplier will now approve your order. Satisfied with your order? Let us know!", R.drawable.onboarding_image3);
                     case 3:
                         return new LoginFragment(); // New fragment for the 4th page
+                    case 4:
+                        return new TermsAndConditionsFragment(); // Add this for Terms and Conditions
                     default:
                         return null;
                 }

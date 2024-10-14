@@ -1,9 +1,20 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BottomSheetBg"
     >
+
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/blueFont"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/title_bar"
@@ -62,7 +73,7 @@
         android:layout_marginTop="80dp"
         android:layout_width="match_parent"
         android:layout_height="620dp">
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -510,6 +521,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/new_container_desc"
                             android:layout_width="250dp"
                             android:layout_height="95dp"
                             android:padding="16dp"
@@ -542,11 +554,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:background="@drawable/water_description_background"
-                            android:buttonTint="#FFFFFF"
-                            android:buttonTintMode="src_atop"
-                            app:useMaterialThemeColors="false" />
+                            app:buttonTint="@color/white"
+                            app:useMaterialThemeColors="false"/>
 
                         <LinearLayout
+                            android:id="@+id/exchange_container_desc"
                             android:layout_marginLeft="10dp"
                             android:layout_width="250dp"
                             android:layout_height="95dp"
@@ -578,6 +590,7 @@
                         <RadioButton
                             android:id="@+id/ex_container_radio"
                             android:layout_width="wrap_content"
+                            app:buttonTint="@color/white"
                             android:layout_height="match_parent"
                             android:background="@drawable/water_description_background"/>
 
@@ -638,15 +651,18 @@
                         android:padding="10dp"
                         />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/counter_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
+                        android:background="@null"
                         android:textSize="18sp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:padding="5dp"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:singleLine="true"/>
 
                     <ImageButton
                         android:id="@+id/plus_button"
@@ -675,7 +691,8 @@
                 android:text="Proceed"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:elevation="2dp"/>
 
 
 
@@ -683,9 +700,9 @@
 
 
         </LinearLayout>
-        
+
     </ScrollView>
-    
-    
+
+
 
 </FrameLayout>

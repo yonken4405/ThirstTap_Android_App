@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,11 +36,13 @@ public class ForgotPasswordFragment1 extends Fragment {
     private TextInputEditText inputEmail;
     private ImageButton backBtn;
     private String email;
+    private ProgressBar loader;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forgot_pass_layout1, container, false);
+        loader = view.findViewById(R.id.loader);
 
         requestBtn = view.findViewById(R.id.request_button);
         backBtn = view.findViewById(R.id.back_button);
@@ -63,10 +66,12 @@ public class ForgotPasswordFragment1 extends Fragment {
     }
 
     private void sendCode(String email) {
+        loader.setVisibility(View.VISIBLE);
         Log.d("SendCode", "Sending code for email: " + email);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_sendCode,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     Log.d("SendCode", "Server response: " + response);
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
@@ -97,6 +102,7 @@ public class ForgotPasswordFragment1 extends Fragment {
                     }
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Log.e("SendCode", "Network error: " + error.getMessage());
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }) {

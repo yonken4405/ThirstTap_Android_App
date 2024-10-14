@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +32,8 @@ public class AddressViewModel extends AndroidViewModel {
     private MutableLiveData<List<BuildingAddress>> buildingAddresses;
     private MutableLiveData<List<HouseAddress>> houseAddresses;
     private RequestQueue requestQueue;
+    private ProgressBar loader;
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     public AddressViewModel(@NonNull Application application) {
         super(application);
@@ -37,6 +42,11 @@ public class AddressViewModel extends AndroidViewModel {
         // Use application context for Volley request queue initialization
         requestQueue = Volley.newRequestQueue(application.getApplicationContext());
         fetchAddresses();  // You can call fetchAddresses here or trigger it from Fragment
+
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 
     public LiveData<List<BuildingAddress>> getBuildingAddresses() {
@@ -48,14 +58,17 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void updateDefaultAddress(int addressId, String addressType) {
+        isLoading.setValue(true);
         String url = "https://thirsttap.scarlet2.io/Backend/updateDefaultAddress.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    isLoading.setValue(false);
                     // Refresh the addresses after updating the default address
                     fetchAddresses();
                 },
                 error -> {
+                    isLoading.setValue(false);
                     Log.e("VolleyError", "Error: " + error.getMessage());
                 }) {
             @Override
@@ -71,15 +84,17 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void fetchAddresses() {
+        isLoading.setValue(true);
         // Retrieve userId from SharedPreferences
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userid", "default_userid");
 
         // Append userId to the URL as a query parameter
-        String url = "https://scarlet2.io/Yankin/ThirstTap/fetchAddress.php?userId=" + userId;
+        String url = "https://thirsttap.scarlet2.io/Backend/fetchAddress.php?userId=" + userId;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
+                    isLoading.setValue(false);
                     Log.d("Response", response.toString());
                     List<BuildingAddress> buildings = new ArrayList<>();
                     List<HouseAddress> houses = new ArrayList<>();
@@ -98,7 +113,7 @@ public class AddressViewModel extends AndroidViewModel {
                                         addressObject.optString("additional", ""),
                                         addressObject.optString("city", ""),
                                         addressObject.optString("postal_code", ""),
-                                        isDefault, addressId
+                                        isDefault, addressId, addressObject.optString("barangay", "")
                                 ));
                             } else if (type.equals("house")) {
                                 houses.add(new HouseAddress(
@@ -107,7 +122,7 @@ public class AddressViewModel extends AndroidViewModel {
                                         addressObject.optString("additional", ""),
                                         addressObject.optString("city", ""),
                                         addressObject.optString("postal_code", ""),
-                                        isDefault, addressId
+                                        isDefault, addressId,  addressObject.optString("barangay", "")
                                 ));
                             }
                         }
@@ -119,6 +134,7 @@ public class AddressViewModel extends AndroidViewModel {
                     }
                 },
                 error -> {
+                    isLoading.setValue(false);
                     Log.e("VolleyError", "Error: " + error.getMessage());
                 }
         );
@@ -128,15 +144,18 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void updateAddress(int addressId, String street, String building, String unit, String city, String postalCode) {
-        String url = "https://scarlet2.io/Yankin/ThirstTap/updateAddress.php";
+        isLoading.setValue(true);
+        String url = "https://thirsttap.scarlet2.io/Backend/updateAddress.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    isLoading.setValue(false);
                     // Optionally handle the response
                     Log.d("UpdateResponse", response);
                     fetchAddresses(); // Refresh the addresses after updating
                 },
                 error -> {
+                    isLoading.setValue(false);
                     Log.e("VolleyError", "Error: " + error.getMessage());
                 }) {
             @Override
@@ -156,15 +175,18 @@ public class AddressViewModel extends AndroidViewModel {
     }
 
     public void deleteAddress(int addressId) {
-        String url = "https://scarlet2.io/Yankin/ThirstTap/deleteAddress.php"; // Replace with your delete URL
+        isLoading.setValue(true);
+        String url = "https://thirsttap.scarlet2.io/Backend/deleteAddress.php"; // Replace with your delete URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
+                    isLoading.setValue(false);
                     // Optionally handle the response
                     Log.d("DeleteResponse", response);
                     fetchAddresses(); // Refresh the addresses after deletion
                 },
                 error -> {
+                    isLoading.setValue(false);
                     Log.e("VolleyError", "Error: " + error.getMessage());
                 }) {
             @Override

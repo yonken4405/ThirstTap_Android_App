@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     private String addressLine, house, additional, building, unit, street, barangay, structure;
     private boolean isNewUser;
     private String email;
+    private ProgressBar loader;
 
 
     @Nullable
@@ -85,7 +87,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_google_maps, container, false);
-
+        loader = view.findViewById(R.id.loader);
 
         // Retrieve user profile data from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
@@ -117,6 +119,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -130,9 +133,30 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-        // Initialize marker with default position (0, 0) or make it null initially
+        // Initialize marker with a default position (0, 0)
         LatLng defaultLatLng = new LatLng(0, 0);
         currentMarker = googleMap.addMarker(new MarkerOptions().position(defaultLatLng).title("Drag the map to move the pin"));
+
+        // Set the initial camera position to the default location
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(defaultLatLng));
+
+        // Listen for camera move (to keep the marker at the center)
+        googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                // Get the current center position of the map
+                LatLng target = googleMap.getCameraPosition().target;
+
+                // Update class variables for latitude and longitude
+                currentLatitude = target.latitude;
+                currentLongitude = target.longitude;
+
+                // Update marker position to keep it in the center
+                if (currentMarker != null) {
+                    currentMarker.setPosition(target);
+                }
+            }
+        });
 
         // Listen for camera idle (when user stops moving the map)
         googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -141,19 +165,13 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                 // Get the current center position of the map
                 LatLng target = googleMap.getCameraPosition().target;
 
-                // Update class variables for latitude and longitude
-                currentLatitude = target.latitude;
-                currentLongitude = target.longitude;
-
+                // Update the address and display the bottom sheet
                 updateAddress(target.latitude, target.longitude);
-
-                // Update marker position if it exists
-                if (currentMarker != null) {
-                    currentMarker.setPosition(target);
-                }
             }
         });
     }
+
+
 
     // Get current location
     private void getCurrentLocation() {
@@ -239,7 +257,8 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void sendAddressToServer(double latitude, double longitude, String barangay, String street, String building, String unit, String house, String additional) {
+    private void sendAddressToServer(double latitude, double longitude, String barangay, String street, String building, String unit, String house, String additional, String isDefault) {
+        loader.setVisibility(View.VISIBLE);
         // Create a request queue
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
@@ -259,11 +278,14 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
         params.put("country", country);
         params.put("type", structure != null ? structure : "default"); // Handle null
         params.put("user_id", userId); // Make sure to replace with actual user ID
+        params.put("is_default", isDefault);
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loader.setVisibility(View.GONE);
                         // Handle the response (which might not be JSON)
                         Log.d("Response", response);
                         try {
@@ -285,6 +307,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        loader.setVisibility(View.GONE);
                         // Handle error
                         Log.e("VolleyError", error.toString());
                         Toast.makeText(requireContext(), "Error saving address", Toast.LENGTH_SHORT).show();
@@ -412,19 +435,27 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                     String unit = unitEt != null ? unitEt.getText().toString().trim() : "";
                     String additional = additionalEt != null ? additionalEt.getText().toString().trim() : "";
 
-                    sendAddressToServer(currentLatitude, currentLongitude, barangay, street, building, unit, house, additional);
-                    bottomSheetDialog.dismiss();
 
                     if (isNewUser) {
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isNewUser", false); // Store addressId
+                        editor.apply(); // Save changes
+                        isNewUser = false;
+
+                        sendAddressToServer(currentLatitude, currentLongitude, barangay, street, building, unit, house, additional, "1");
+                        bottomSheetDialog.dismiss();
                         updateIsNewUserStatus(email); //update not a new user anymore
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
                     } else {
+                        sendAddressToServer(currentLatitude, currentLongitude, barangay, street, building, unit, house, additional, "0");
+                        bottomSheetDialog.dismiss();
                         AddressListFragment fragment = new AddressListFragment();
-                        getParentFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit();
+                        Bundle args = new Bundle();
+                        args.putString("sourceFragment", "googleMapsFragment"); // Pass the source fragment
+                        fragment.setArguments(args);
+                        getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
                     }
 
                 }
@@ -448,10 +479,12 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void updateIsNewUserStatus(String email) {
+        loader.setVisibility(View.VISIBLE);
         String url_updateStatus = "https://thirsttap.scarlet2.io/Backend/updateUserStatus.php"; // Replace with your correct URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_updateStatus,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
                         if (jsonResponse.getString("success").equals("1")) {
@@ -465,6 +498,7 @@ public class GoogleMapsFragment extends Fragment implements OnMapReadyCallback {
                     }
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Log.d("LoginBottomSheet", "Network error: " + error.getMessage());
                 }) {
             @Override

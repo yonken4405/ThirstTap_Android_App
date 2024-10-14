@@ -151,6 +151,7 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:textColor="@color/josiahBlack"
                 android:textSize="13sp"
+                app:buttonTint="@color/blueFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -159,6 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
+                app:buttonTint="@color/blueFont"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="Building"
                 android:textColor="@color/josiahBlack"
@@ -179,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_gravity="bottom"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/blueFont"
             android:fontFamily="@font/montserrat_semibold"
             android:insetTop="0dp"
@@ -187,7 +189,9 @@
             android:text="Save and Continue"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:elevation="2dp"
+            android:layout_marginBottom="5dp"/>
 
     </LinearLayout>
 

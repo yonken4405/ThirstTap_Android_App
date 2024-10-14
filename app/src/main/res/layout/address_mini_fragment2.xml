@@ -13,7 +13,7 @@
         style="@style/TextInputLayoutColors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="House Number (Optional)"
+        android:hint="House Number"
         android:textColorHint="@color/InputText"
         app:boxStrokeErrorColor="@color/red"
         app:errorEnabled="false"
@@ -49,6 +49,7 @@
         app:startIconTint="@null">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:visibility="gone"
             android:id="@+id/additional_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

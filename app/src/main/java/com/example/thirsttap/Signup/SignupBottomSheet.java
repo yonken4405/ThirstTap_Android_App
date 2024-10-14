@@ -1,21 +1,27 @@
 package com.example.thirsttap.Signup;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -23,8 +29,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.AccountPage.TermsAndConditionsFragment;
 import com.example.thirsttap.Login.LoginBottomSheet;
 import com.example.thirsttap.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,22 +44,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignupBottomSheet extends BottomSheetDialogFragment {
-    TextInputEditText signupEmail, signupPassword, confirmPassword, signupName, signupPhoneNum;
-    String email, password, confirmPass, name, phoneNum;
-    CheckBox cb;
-    TextInputLayout passError, conPassError, emailLayout, nameLayout, numLayout;
-    TextView errorMess;
-    ImageButton backBtn;
-    Button signupBtn;
+    private TextInputEditText signupEmail, signupPassword, confirmPassword, signupName, signupPhoneNum;
+    private String email, password, confirmPass, name, phoneNum;
+    private CheckBox cb;
+    private TextInputLayout passError, conPassError, emailLayout, nameLayout, numLayout;
+    private TextView errorMess, termsConditions, privacyPolicy;
+    private ImageButton backBtn;
+    private Button signupBtn;
+    private ProgressBar loader;
+
 
     // URL for the signup endpoint
-    String url_signup = "https://scarlet2.io/Yankin/ThirstTap/register.php"; // Ensure this is correct
+    String url_signup = "https://thirsttap.scarlet2.io/Backend/register.php"; // Ensure this is correct
 
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.signup_layout, container, false);
+        loader = view.findViewById(R.id.loader);
 
         signupBtn = view.findViewById(R.id.signup_button);
         signupEmail = view.findViewById(R.id.signup_email);
@@ -67,7 +78,8 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
         emailLayout = view.findViewById(R.id.email_layout);
         nameLayout = view.findViewById(R.id.name_layout);
         numLayout = view.findViewById(R.id.number_layout);
-
+        termsConditions = view.findViewById(R.id.terms_conditions);
+        privacyPolicy = view.findViewById(R.id.privacy_policy);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +99,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
                 phoneNum = signupPhoneNum.getText().toString().trim();
 
                 if (isChecked) {
+                    cb.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.blueFont)));
                     if (!name.isEmpty() && !email.isEmpty() && !phoneNum.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty()) {
                         signupBtn.setBackgroundColor(getResources().getColor(R.color.blueFont));
                         signupBtn.setEnabled(true);
@@ -97,6 +110,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
                     signupBtn.setEnabled(false);
                     errorMess.setText("Please agree to the terms and conditions");
                     errorMess.setVisibility(View.VISIBLE);
+                    cb.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
                 }
             }
         });
@@ -109,14 +123,91 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             phoneNum = signupPhoneNum.getText().toString().trim();
 
             // Proceed with signup if form is valid
-            if (!validateName() || !validateEmail() || !validateNumber() || !validatePassword() || !confirmPassword()) {
+            if (!validateFields()) {
                 return;
             }
             signupUser(email, password, name, phoneNum);
         });
 
+        termsConditions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss the current BottomSheetDialog
+                dismiss();
+
+                loader.setVisibility(View.VISIBLE);
+
+                TermsAndConditionsBottomSheet termsSheet = new TermsAndConditionsBottomSheet();
+                termsSheet.show(getParentFragmentManager(), "Terms and Conditions");
+
+
+            }
+        });
+
+        privacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss the current BottomSheetDialog
+                dismiss();
+
+                loader.setVisibility(View.VISIBLE);
+
+                TermsAndConditionsBottomSheet termsSheet = new TermsAndConditionsBottomSheet();
+                termsSheet.show(getParentFragmentManager(), "Terms and Conditions");
+
+                // Use FragmentTransaction's `runOnCommit` to hide the ProgressBar after the transaction is done
+                getParentFragmentManager().beginTransaction().runOnCommit(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Hide the ProgressBar after fragment is loaded
+                        loader.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+//        // Set up the ScrollView touch handling
+//        NestedScrollView scrollView = view.findViewById(R.id.scrollView);
+//        scrollView.setOnTouchListener((v, event) -> {
+//            // Disable touch events on the scroll view to prevent dismissing the BottomSheet
+//            return event.getAction() == MotionEvent.ACTION_MOVE;
+//        });
+
+
 
         return view;
+    }
+
+
+
+    private boolean validateFields() {
+        boolean isValid = true;
+
+        // Reset error messages
+        nameLayout.setError(null);
+        emailLayout.setError(null);
+        numLayout.setError(null);
+        passError.setError(null);
+        conPassError.setError(null);
+
+        // Validate each field and track if any are invalid
+        if (!validateName()) {
+            isValid = false;
+        }
+        if (!validateEmail()) {
+            isValid = false;
+        }
+        if (!validateNumber()) {
+            isValid = false;
+        }
+        if (!validatePassword()) {
+            isValid = false;
+        }
+        if (!confirmPassword()) {
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     private boolean validateName() {
@@ -140,11 +231,11 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             emailLayout.setErrorEnabled(true);
             emailLayout.setError("Field cannot be empty");
             return false;
-        } else if(!Patterns.EMAIL_ADDRESS.matcher(val).matches()){
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(val).matches()) {
             emailLayout.setErrorEnabled(true);
             emailLayout.setError("Please enter a valid email");
             return false;
-        }else {
+        } else {
             emailLayout.setError(null);
             emailLayout.setErrorEnabled(false);
             return true;
@@ -158,11 +249,11 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             numLayout.setErrorEnabled(true);
             numLayout.setError("Field cannot be empty");
             return false;
-        } else if(!val.matches("(09)\\d{9}")){
+        } else if (!val.matches("(09)\\d{9}")) {
             numLayout.setErrorEnabled(true);
             numLayout.setError("Please enter a valid phone number (09XXXXXXXXX)");
             return false;
-        }else {
+        } else {
             numLayout.setError(null);
             numLayout.setErrorEnabled(false);
             return true;
@@ -171,27 +262,25 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
 
     private boolean validatePassword() {
         String val = signupPassword.getText().toString().trim();
-        String passwordVal = "^" + //Matches the beginning of the string.
-                "(?=.*[A-Z])" + //Positive lookahead assertion for at least one uppercase letter.
-                "(?=.*[a-z])" + //Positive lookahead assertion for at least one lowercase letter.
-                "(?=.*\\d)" + //Positive lookahead assertion for at least one digit.
-                ".{8,}" + //At least 8 digits
-                // + //Positive lookahead assertion for at least one special character.
-                //"[A-Za-z\\d!@#$%^&*]{8,}" + //Matches a string containing uppercase letters, lowercase letters, digits, and special characters with a minimum length of 8.
-                "$"; //Matches the end of the string.
+        String passwordVal = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$"; // Password regex
+
         if (val.isEmpty()) {
+            passError.setErrorEnabled(true);
             passError.setError("Field cannot be empty");
             return false;
-        } else if(!val.matches(passwordVal)){
-            passError.setErrorEnabled(true);
-            passError.setError("Password must have at least: \n- 1 uppercase letter \n- 1 lowercase letter \n- 1 digit \n- 8 characters");
+        } else if (!val.matches(passwordVal)) {
+            Log.d("passwordlength", "pass length not enough");
+            passError.setErrorEnabled(true);  // Ensure error display is explicitly enabled
+            passError.setError("Password must have at least:\n- 1 uppercase letter\n- 1 lowercase letter\n- 1 digit\n- 8 characters");
             return false;
         } else {
-            passError.setErrorEnabled(false);
             passError.setError(null);
+            passError.setErrorEnabled(false);  // Explicitly disable error message when valid
             return true;
         }
     }
+
+
 
     private boolean confirmPassword() {
         String val = signupPassword.getText().toString().trim();
@@ -201,7 +290,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             conPassError.setErrorEnabled(true);
             conPassError.setError("Field cannot be empty");
             return false;
-        } else if(!val.equals(val2)){
+        } else if (!val.equals(val2)) {
             conPassError.setErrorEnabled(true);
             passError.setErrorEnabled(true);
             conPassError.setError("Passwords do not match");
@@ -210,47 +299,52 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
         } else {
             conPassError.setError(null);
             conPassError.setErrorEnabled(false);
-            passError.setErrorEnabled(false);
-            passError.setError(null);
+//            passError.setErrorEnabled(false);
+//            passError.setError(null);
             return true;
         }
     }
 
     private void signupUser(String email, String password, String name, String phoneNum) {
+        loader.setVisibility(View.VISIBLE);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_signup,
                 response -> {
-
+                    loader.setVisibility(View.GONE);
                     Log.d("SignupBottomSheet", "Server response: " + response);
 
                     try {
                         // Check if the response is a valid JSON object
                         if (response.trim().startsWith("{")) {
                             JSONObject jsonResponse = new JSONObject(response.trim());
-                            String success = jsonResponse.optString("success", "0");
+                            String success = jsonResponse.getString("success");
 
-                            if ("1".equals(success)) {
-                                onSignupSuccess();
+                            if (success.equals("1")) {
+                                dismiss();
+                                Toast.makeText(getActivity(), "Signup successful!", Toast.LENGTH_SHORT).show();
+                                showVerificationBottomSheet(email);
+
                             } else {
-                                String message = jsonResponse.optString("message", "Signup failed");
-                                onSignupFailure(message);
+                                String message = jsonResponse.getString("message");
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            // Handle cases where the response is not a JSON object
-                            Log.e("SignupBottomSheet", "Invalid response format: " + response);
-                            showToast("Invalid response from server");
+                            // Handle unexpected response format
+                            Toast.makeText(getActivity(), "Unexpected response from server", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Log.e("SignupBottomSheet", "JSON parsing error: ", e);
-                        showToast("Error: " + e.getMessage());
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Error parsing response", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> {
-                    Log.e("SignupBottomSheet", "Network error: ", error);
-                    showToast("Network error: " + error.getMessage());
-                }
-        ) {
+                    loader.setVisibility(View.GONE);
+                    Log.e("SignupBottomSheet", "Error: " + error.getMessage());
+                    Toast.makeText(getActivity(), "Signup failed. Please try again later.", Toast.LENGTH_SHORT).show();
+                }) {
             @Override
             protected Map<String, String> getParams() {
+                // Create a map for POST parameters
                 Map<String, String> params = new HashMap<>();
                 params.put("email", email);
                 params.put("password", password);
@@ -260,52 +354,26 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             }
         };
 
-        //extend default timeout in case of low signal
-        int socketTimeout = 30000; // 30 seconds timeout
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        // Set timeout for the request
+        RetryPolicy policy = new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        // Add the request to the RequestQueue
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
-    }
-
-    private void onSignupSuccess() {
-        Log.d("SignupBottomSheet", "Signup successful");
-        getActivity().runOnUiThread(() -> {
-            showToast("Account created successfully");
-            dismiss();
-            showVerificationBottomSheet(email);
-        });
-
-    }
-
-    private void onSignupFailure(String message) {
-        Log.e("SignupBottomSheet", "Signup failed: " + message);
-        showToast(message);
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-
-    private void showLoginBottomSheet() {
-        if (getParentFragmentManager() != null) {
-            LoginBottomSheet loginBottomSheet = new LoginBottomSheet();
-            loginBottomSheet.show(getParentFragmentManager(), "LoginBottomSheet");
-        } else {
-            Log.e("SignupBottomSheet", "ParentFragmentManager is null");
-        }
     }
 
     private void showVerificationBottomSheet(String email) {
         if (getParentFragmentManager() != null) {
-            EmailVerificationBottomSheet verificationBottomSheet = EmailVerificationBottomSheet.newInstance(email);
+            EmailVerificationBottomSheet verificationBottomSheet = EmailVerificationBottomSheet.newInstance(email, "signup");
             verificationBottomSheet.show(getParentFragmentManager(), "EmailVerificationBottomSheet");
         } else {
             Log.e("SignupBottomSheet", "ParentFragmentManager is null");
         }
     }
 
-
+    private void showLoginBottomSheet() {
+        LoginBottomSheet loginBottomSheet = new LoginBottomSheet();
+        loginBottomSheet.show(getChildFragmentManager(), loginBottomSheet.getTag());
+    }
 }

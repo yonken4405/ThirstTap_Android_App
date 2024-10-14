@@ -3,13 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_botsheet">
+    android:background="@drawable/rounded_botsheet"
+    app:layout_behavior="com.example.thirsttap.Login.CustomBottomSheetBehavior">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
+
+        <ProgressBar
+            android:id="@+id/loader"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="10dp"
+            android:indeterminateTint="@color/blueFont"
+            android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:layout_width="match_parent"
@@ -103,7 +119,8 @@
             android:text="Login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:elevation="4dp"/>
 
         <!-- Left Line -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -164,7 +181,8 @@
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="11sp"
-            app:cornerRadius="20dp" />
+            app:cornerRadius="24dp"
+            android:elevation="2dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -191,5 +209,9 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
+
     </LinearLayout>
+
+
+    </FrameLayout>
 </ScrollView>

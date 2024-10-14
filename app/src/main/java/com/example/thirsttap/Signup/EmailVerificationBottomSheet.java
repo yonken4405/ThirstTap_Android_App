@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,22 +37,33 @@ import java.util.HashMap;
 import java.util.Map;
 public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
 
-    private String url_verify = "https://scarlet2.io/Yankin/ThirstTap/verify.php";
-    private String url_resendCode = "https://scarlet2.io/Yankin/ThirstTap/resendCode.php";
+    private String url_verify = "https://thirsttap.scarlet2.io/Backend/verify.php";
+    private String url_resendCode = "https://thirsttap.scarlet2.io/Backend/resendCode.php";
     private EditText[] otpFields;
     private Button verifyButton;
     private ImageButton backBtn;
     private String email, digit1, digit2, digit3, digit4, code;
-    TextView resendBtn;
+    private TextView resendBtn;
+    private String popupBasis;
+    private ProgressBar loader;
+
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_email_verification, container, false);
+        loader = view.findViewById(R.id.loader);
 
         verifyButton = view.findViewById(R.id.verify_button);
         backBtn = view.findViewById(R.id.back_button);
         resendBtn = view.findViewById(R.id.resend_button);
+
+        // Get email and custom popup message from arguments
+        if (getArguments() != null) {
+            email = getArguments().getString("email");
+            popupBasis = getArguments().getString("popup_basis", null); // Default to null
+        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +92,18 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
             email = getArguments().getString("email");
         }
 
+        Log.d("popupbasis", popupBasis);
         verifyButton.setOnClickListener(v -> {
             code = getOtpCode();
             if (!code.isEmpty() && email != null) {
-                verifyEmail(code, email);
+                if (popupBasis.equals("signup")){
+                    verifyEmail(code, email);
+                } else if (popupBasis.equals("changeEmail")){
+                    verifyEmailCode(code, email);
+                } else if (popupBasis.equals("forgotPassword")){
+                    verifyEmailCode(code, email);
+                }
+
             } else {
                 Toast.makeText(getContext(), "Please enter the verification code", Toast.LENGTH_SHORT).show();
             }
@@ -100,6 +120,8 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
 
         return view;
     }
+
+
 
     private String getOtpCode() {
         StringBuilder codeBuilder = new StringBuilder();
@@ -132,21 +154,27 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void verifyEmail(String code, String email) {
+        loader.setVisibility(View.VISIBLE);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_verify,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     try {
                         JSONObject jsonResponse = new JSONObject(response.trim());
                         if ("1".equals(jsonResponse.optString("success", "0"))) {
                             dismiss();
-                            showPopup();
+                            showSignupVerificationPopup();
+
                         } else {
                             Toast.makeText(getContext(), "Verification failed", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Log.d("response verification", response);
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }) {
 
@@ -163,10 +191,66 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
         requestQueue.add(stringRequest);
     }
 
+    public interface VerificationListener {
+        void onVerificationSuccess(String email);
+        void onVerificationFailure(String errorMessage);
+    }
+
+    private VerificationListener verificationListener;
+
+    public void setVerificationListener(VerificationListener listener) {
+        this.verificationListener = listener;
+    }
+
+
+    private void verifyEmailCode(String code, String email) {
+        loader.setVisibility(View.VISIBLE);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_verify,
+                response -> {
+                    loader.setVisibility(View.GONE);
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.trim());
+                        if ("1".equals(jsonResponse.optString("success", "0"))) {
+                            dismiss();
+                            if (verificationListener != null) {
+                                verificationListener.onVerificationSuccess(email);
+                            }
+                            Toast.makeText(getContext(), "Email Verified Successfully!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (verificationListener != null) {
+                                verificationListener.onVerificationFailure("Verification failed");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("response verification", response);
+                },
+                error -> {
+                    loader.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("verification_code", code);
+                params.put("email", email);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+    }
+
+
     private void resendCode(String email) {
+        loader.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url_resendCode,
                 response -> {
 
+                    loader.setVisibility(View.GONE);
                     Log.d("ResendCode", "Server response: " + response);
 
                     try {
@@ -181,6 +265,7 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
                     }
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Network error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }) {
 
@@ -202,7 +287,7 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
         requestQueue.add(stringRequest);
     }
 
-    private void showPopup() {
+    private void showSignupVerificationPopup() {
         // Inflate the popup_layout.xml
         LayoutInflater inflater = getLayoutInflater(); // Use getLayoutInflater() instead of getSystemService
         View popupView = inflater.inflate(R.layout.email_verified_popup, null);
@@ -256,12 +341,14 @@ public class EmailVerificationBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    public static EmailVerificationBottomSheet newInstance(String email) {
+    public static EmailVerificationBottomSheet newInstance(String email, String popupBasis) {
         EmailVerificationBottomSheet fragment = new EmailVerificationBottomSheet();
         Bundle args = new Bundle();
         args.putString("email", email);
+        args.putString("popup_basis", popupBasis); // New parameter for popup control
         fragment.setArguments(args);
         return fragment;
     }
+
 }
 

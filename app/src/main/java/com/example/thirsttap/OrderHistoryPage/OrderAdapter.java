@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.thirsttap.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
@@ -18,7 +19,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private List<Order> orderList;
 
     public OrderAdapter(List<Order> orderList) {
-        this.orderList = orderList;
+        this.orderList = orderList != null ? orderList : new ArrayList<>(); // Avoid null reference
     }
 
     @NonNull
@@ -30,6 +31,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
+        // Check for valid position
+        if (position < 0 || position >= orderList.size()) {
+            Log.e("OrderAdapter", "Invalid position: " + position + " for list size: " + orderList.size());
+            return; // Early return to prevent exception
+        }
+
         Order order = orderList.get(position);
         Log.d("OrderAdapter", "Binding order: " + order.getOrderId() + " at position: " + position);
 
@@ -39,29 +46,40 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             holder.amount.setText(order.getAmount() != null ? order.getAmount() : "N/A");
             holder.customerName.setText(order.getCustomerName() != null ? order.getCustomerName() : "N/A");
             holder.deliveryDate.setText(order.getDeliveryDate() != null ? order.getDeliveryDate() : "N/A");
+            holder.deliveryAddress.setText(order.getDeliveryAddress() != null ? order.getDeliveryAddress() : "N/A");
         } else {
             Log.e("OrderAdapter", "Order is null at position: " + position);
         }
     }
 
+    public void updateOrderList(List<Order> newList) {
+        if (newList != null) {
+            orderList.clear();
+            orderList.addAll(newList);
+        } else {
+            orderList.clear(); // Clear the list if newList is null
+        }
+        notifyDataSetChanged(); // Notify the adapter of the change
+    }
+
     @Override
     public int getItemCount() {
-        return orderList.size();
+        return orderList.size(); // Return the size of the list
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-
-        TextView orderStatus, orderId, amount, customerName, deliveryDate;
+        TextView orderStatus, orderId, amount, customerName, deliveryDate, deliveryAddress;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-
             orderStatus = itemView.findViewById(R.id.tv_order_status);
             orderId = itemView.findViewById(R.id.tv_order_id);
             amount = itemView.findViewById(R.id.tv_order_amount);
             customerName = itemView.findViewById(R.id.tv_customer_name);
             deliveryDate = itemView.findViewById(R.id.tv_delivery_date);
+            deliveryAddress = itemView.findViewById(R.id.tv_customer_address);
         }
     }
 }
+
 

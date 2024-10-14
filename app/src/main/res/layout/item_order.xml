@@ -20,7 +20,9 @@
             android:id="@+id/tv_order_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semibold"
             android:text="Pending Order"
+            android:textSize="13sp"
             android:textColor="@android:color/holo_blue_dark"
             android:textStyle="bold" />
 
@@ -32,18 +34,24 @@
 
             <!-- Customer Details -->
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/tv_customer_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="J. Rodriguez"
-                android:textStyle="bold" />
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_semibold"/>
 
             <TextView
+                android:layout_weight="2"
                 android:id="@+id/tv_customer_address"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:gravity="right"
                 android:layout_height="wrap_content"
-                android:text="123 Water Lane, Cityname" />
+                android:text="123 Water Lane, Cityname"
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_regular"
+                />
 
         </LinearLayout>
 
@@ -56,17 +64,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Order ID"
-                android:textStyle="bold" />
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_semibold" />
 
             <TextView
                 android:id="@+id/tv_order_id"
+                android:layout_weight="2"
+                android:gravity="right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="#WR-2024-01" />
+                android:text="#WR-2024-01"
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_regular"/>
         </LinearLayout>
 
         <LinearLayout
@@ -76,18 +88,22 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+
                 android:text="Delivery Date"
-                android:textStyle="bold" />
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_semibold"/>
 
             <TextView
                 android:id="@+id/tv_delivery_date"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="Delivery Date"
-                android:textSize="14sp" />
+                android:gravity="right"
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_regular"/>
         </LinearLayout>
 
 
@@ -100,17 +116,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Amount Due"
-                android:textStyle="bold" />
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_semibold"/>
 
             <TextView
                 android:id="@+id/tv_order_amount"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="₱350.00" />
+                android:layout_weight="2"
+                android:text="₱350.00"
+                android:gravity="right"
+                android:textColor="@color/josiahBlack"
+                android:fontFamily="@font/montserrat_regular"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

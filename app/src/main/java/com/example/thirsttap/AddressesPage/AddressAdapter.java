@@ -1,7 +1,7 @@
 package com.example.thirsttap.AddressesPage;
 
-import android.content.Intent;
-import android.provider.Telephony;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.thirsttap.MainActivity;
 import com.example.thirsttap.R;
 
 import java.util.List;
@@ -24,11 +23,15 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     private List<BuildingAddress> buildingAddressList;
     private List<HouseAddress> houseAddressList;
     private OnAddressClickListener onAddressClickListener;
+    private String sourceFragment;
 
-    public AddressAdapter(List<BuildingAddress> buildingAddressList, List<HouseAddress> houseAddressList, OnAddressClickListener listener) {
+
+    public AddressAdapter(List<BuildingAddress> buildingAddressList, List<HouseAddress> houseAddressList, OnAddressClickListener listener, String sourceFragment) {
         this.buildingAddressList = buildingAddressList;
         this.houseAddressList = houseAddressList;
         this.onAddressClickListener = listener;
+        this.sourceFragment = sourceFragment;
+
     }
 
     @Override
@@ -55,13 +58,32 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_BUILDING) {
             BuildingAddress buildingAddress = buildingAddressList.get(position);
-            holder.streetTextView.setText(buildingAddress.getStreet() + ", " + buildingAddress.getBuildingName() + ", " + buildingAddress.getUnitNumber()+ ", " +buildingAddress.getCity() + ", " + buildingAddress.getPostalCode());
+            String chosenAddress = buildingAddress.getUnitNumber() + " " +buildingAddress.getBuildingName() + " " + buildingAddress.getStreet() + ", " + buildingAddress.getBarangay() + ", " + buildingAddress.getCity() + ", " + buildingAddress.getPostalCode();
+            holder.streetTextView.setText(chosenAddress);
 
             holder.defaultTextView.setVisibility(buildingAddress.isDefault() ? View.VISIBLE : View.GONE);
 
             holder.itemView.setOnClickListener(v -> {
-                onAddressClickListener.onAddressClick(buildingAddress.getAddressId(), "building");
+                holder.streetTextView.setText(chosenAddress);
+                // Change: Only change the addressId if the address is tapped
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("chosen_address_id", buildingAddress.getAddressId());  // Update addressId based on user selection
+                editor.putString("chosen_address", chosenAddress);
+                editor.apply();
+                Log.d("AddressAdapter", "Stored Address ID: " + buildingAddress.getAddressId());
+
+                onAddressClickListener.onAddressClick(buildingAddress.getAddressId(), "building", sourceFragment);
             });
+
+            //hide if just choosing address for checkout
+            if (sourceFragment.equals("checkOutFragment")){
+                holder.editBtn.setVisibility(View.GONE);
+                holder.deleteBtn.setVisibility(View.GONE);
+            } else {
+                holder.editBtn.setVisibility(View.VISIBLE);
+                holder.deleteBtn.setVisibility(View.VISIBLE);
+            }
 
             holder.editBtn.setOnClickListener(v -> {
                 onAddressClickListener.onEditClick(buildingAddress.getAddressId());
@@ -72,13 +94,30 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
             });
         } else {
             HouseAddress houseAddress = houseAddressList.get(position - buildingAddressList.size());
-            holder.streetTextView.setText(houseAddress.getStreet() + ", " + houseAddress.getHouseNumber()+ ", " +houseAddress.getCity() + ", " + houseAddress.getPostalCode());
+            String chosenAddress = houseAddress.getHouseNumber() + " " + houseAddress.getStreet() + ", " + houseAddress.getBarangay() + ", " + houseAddress.getCity() + ", " + houseAddress.getPostalCode();
+            holder.streetTextView.setText(chosenAddress);
 
             holder.defaultTextView.setVisibility(houseAddress.isDefault() ? View.VISIBLE : View.GONE);
 
             holder.itemView.setOnClickListener(v -> {
-                onAddressClickListener.onAddressClick(houseAddress.getAddressId(), "house");
+                // Change: Only change the addressId if the address is tapped
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("chosen_address_id", houseAddress.getAddressId());  // Update addressId based on user selection
+                editor.putString("chosen_address", chosenAddress);
+                editor.apply();
+
+                onAddressClickListener.onAddressClick(houseAddress.getAddressId(), "house", sourceFragment);
             });
+
+            //hide if just choosing address for checkout
+            if (sourceFragment.equals("checkOutFragment")){
+                holder.editBtn.setVisibility(View.GONE);
+                holder.deleteBtn.setVisibility(View.GONE);
+            } else {
+                holder.editBtn.setVisibility(View.VISIBLE);
+                holder.deleteBtn.setVisibility(View.VISIBLE);
+            }
 
             holder.editBtn.setOnClickListener(v -> {
                 onAddressClickListener.onEditClick(houseAddress.getAddressId());
@@ -96,24 +135,25 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     }
 
     public interface OnAddressClickListener {
-        void onAddressClick(int addressId, String addressType);
+        void onAddressClick(int addressId, String addressType, String sourceFragment);
         void onEditClick(int addressId);
         void onDeleteClick(int addressId);
+        Context getContext(); // Add getContext method to allow SharedPreferences access
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView streetTextView;
-        TextView cityTextView;
         TextView defaultTextView;
         ImageButton editBtn, deleteBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
             streetTextView = itemView.findViewById(R.id.address_street);
-            //cityTextView = itemView.findViewById(R.id.address_city);
             defaultTextView = itemView.findViewById(R.id.address_default);
             editBtn = itemView.findViewById(R.id.edit_btn);
             deleteBtn = itemView.findViewById(R.id.delete_btn);
         }
     }
+
+
 }

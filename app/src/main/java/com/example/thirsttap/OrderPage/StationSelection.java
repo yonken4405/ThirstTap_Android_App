@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +16,13 @@ import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -27,8 +32,11 @@ import android.Manifest;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.AddressesPage.Address;
 import com.example.thirsttap.HomePage.HomeFragment;
 import com.example.thirsttap.MainActivity;
 import com.example.thirsttap.R;
@@ -38,6 +46,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -49,23 +58,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StationSelection extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 123;
 
     ImageButton backBtn;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient;
-    private Marker currentMarker;
+    private Marker currentMarker, defaultAddressMarker;
     private String stationAddress,stationName, stationId;
     private String userId, email, name, phoneNum;
     private Button orderButton;
-    OrderViewModel orderViewModel;
+    private OrderViewModel orderViewModel;
+    private Double defaultLatitude, defaultLongitude;
+    private int defaultAddressId;
+    private ProgressBar loader;
+
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_station_selection, container, false);
+        loader = view.findViewById(R.id.loader);
 
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
 
@@ -76,6 +93,8 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         name = sharedPreferences.getString("name", "default_name");
         phoneNum = sharedPreferences.getString("phone_num", "default_phone_num");
         boolean isNewUser = sharedPreferences.getBoolean("isNewUser", false);
+
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -94,6 +113,10 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        fetchDefaultAddress();
+
+        Log.d("defaultaddressid station", String.valueOf(defaultAddressId));
+
 
         return view;
     }
@@ -104,6 +127,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             getCurrentLocation();
+            fetchDefaultAddress(); // Fetch and display the default address
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
@@ -112,6 +136,8 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
             // Check if the clicked marker is the user's marker
             if (marker.equals(currentMarker)) {
                 return false; // Ignore click events for the user's marker
+            } else if (marker.equals(defaultAddressMarker )) {
+                return false; // Ignore click events for the user's marker
             }
             // Otherwise, handle clicks on station markers
             showStationDetails(marker); // Show station details
@@ -119,32 +145,15 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         });
     }
 
-//    private void addStationMarkers(double latitude, double longitude, String stationName, String stationAddress) {
-//        LatLng stationLocation = new LatLng(latitude, longitude);
-//        MarkerOptions markerOptions = new MarkerOptions()
-//                .position(stationLocation)
-//                .title(stationName);
-//
-//        Marker marker = googleMap.addMarker(markerOptions);
-//        // Set the station name and address as a tag using a JSONObject
-//        JSONObject stationInfo = new JSONObject();
-//        try {
-//            stationInfo.put("name", stationName);
-//            stationInfo.put("address", stationAddress);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        marker.setTag(stationInfo.toString()); // Store the JSON string in the tag
-//    }
-
-
-
 
     private void fetchStations() {
+        loader.setVisibility(View.VISIBLE);
+
         String stationUrl = "https://thirsttap.scarlet2.io/Backend/fetchStations.php"; // Replace with your actual URL
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, stationUrl,
                 response -> {
+                    loader.setVisibility(View.GONE);
                     try {
                         JSONArray stationsArray = new JSONArray(response);
                         for (int i = 0; i < stationsArray.length(); i++) {
@@ -158,6 +167,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
                             String openingHours = station.getString("opening_hours");
                             stationId = station.getString("station_id");
                             addStationMarkers(latitude, longitude, stationName, stationAddress, contactNumber, email, openingHours, stationId);
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -167,6 +177,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
 
                 },
                 error -> {
+                    loader.setVisibility(View.GONE);
                     Log.e("VolleyError", error.toString());
                     Toast.makeText(requireContext(), "Error fetching stations", Toast.LENGTH_SHORT).show();
                 });
@@ -179,7 +190,8 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         LatLng stationLocation = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(stationLocation)
-                .title(stationName);
+                .title(stationName)
+                .icon(getBitmapDescriptorFromVector(R.drawable.baseline_location_pin_24)); // Use your custom drawable
 
         Marker marker = googleMap.addMarker(markerOptions);
         marker.setTag(new String[]{stationName, stationAddress, contactNumber, email, openingHours, stationId}); // Store additional data
@@ -209,23 +221,12 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         orderButton = view.findViewById(R.id.order_button);
         orderButton.setOnClickListener(v -> {
 
-//            // Prepare the station details to pass to the next fragment
-//            Bundle bundle = new Bundle();
-//            bundle.putString("station_name", stationDetails[0]); // Station Name
-//            bundle.putString("station_address", stationDetails[1]); // Station Address
-//            bundle.putString("station_schedule", stationDetails[4]); // Station Opening Hours
-//            bundle.putString("station_id", stationDetails[5]); // Station Id
-
             if (orderViewModel != null) {
                 orderViewModel.setStationData(stationDetails[0], stationDetails[1], stationDetails[4], stationDetails[5]);
             } else {
                 // Handle the case where orderViewModel is null
                 Log.e("StationSelection", "OrderViewModel is null");
             }
-
-
-
-
 
 
             Log.d("stationselect stationid", stationDetails[5]);
@@ -235,6 +236,7 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
             //fragment.setArguments(bundle); // Pass the bundle to OrderFragment
             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
 
+            orderViewModel.clearCart();
             stationDetailsDialog.dismiss(); // Dismiss the dialog after navigating
         });
 
@@ -267,23 +269,114 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
             public void onSuccess(Location location) {
                 if (location != null) {
                     LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14f));
 
-                    // Update marker position or create a new marker with a custom icon
-                    if (currentMarker != null) {
-                        currentMarker.setPosition(currentLatLng);
-                    } else {
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(currentLatLng)
-                                .title("Your location")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.loc_icon_user)); // Use your custom drawable
-                        currentMarker = googleMap.addMarker(markerOptions);
-                    }
+                    // Create a marker for current location with a tag
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(currentLatLng)
+                            .title("Your current location")
+                            .icon(getBitmapDescriptorFromVector(R.drawable.baseline_person_pin_circle_24)); // Use your custom drawable
+                    currentMarker = googleMap.addMarker(markerOptions);
+                    currentMarker.setTag("current_location"); // Tag for current location marker
                 } else {
                     Toast.makeText(requireContext(), "Unable to get location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+    private void fetchDefaultAddress() {
+        loader.setVisibility(View.VISIBLE);
+        String url = "https://thirsttap.scarlet2.io/Backend/fetchDefaultAddress.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loader.setVisibility(View.GONE);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            defaultLatitude = jsonObject.getDouble("latitude");
+                            defaultLongitude = jsonObject.getDouble("longitude");
+                            defaultAddressId = jsonObject.getInt("address_id");
+
+                            // Now move the camera to the default address if the map is ready
+                            if (googleMap != null) {
+                                LatLng defaultAddress = new LatLng(defaultLatitude, defaultLongitude);
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultAddress, 14f));
+
+                                // Optionally, add a marker for the default address
+                                MarkerOptions markerOptions = new MarkerOptions()
+                                        .position(defaultAddress)
+                                        .title("Default Address");
+
+                                defaultAddressMarker = googleMap.addMarker(markerOptions); // Change to defaultAddressMarker
+                            }
+
+                            // Assuming you get the following fields from the server response
+                            String barangay = jsonObject.getString("barangay");
+                            String street = jsonObject.getString("street");
+                            String building = jsonObject.getString("building");
+                            String unit = jsonObject.getString("unit");
+                            String houseNum = jsonObject.getString("house_num");
+                            String additional = jsonObject.getString("additional");
+                            String city = jsonObject.getString("city");
+                            String state = jsonObject.getString("state");
+                            String postal = jsonObject.getString("postal_code");
+
+                            // Create an Address object
+                            Address address = new Address(
+                                    barangay, street, building, unit, houseNum, additional, city, state, postal
+                            );
+
+                            // Format the address using the formatAddress method
+                            String formattedAddress = Address.defaultAddress(address);
+
+                            // Store address ID in SharedPreferences here
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("chosen_address_id", defaultAddressId); // Store addressId
+                            editor.putString("chosen_address", formattedAddress);
+                            editor.apply(); // Save changes
+
+                            Log.d("Response StationSelection", formattedAddress);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("Response StationSelection", response);
+                        Log.d("Coordinates", "Latitude: " + defaultLatitude + ", Longitude: " + defaultLongitude);
+
+
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loader.setVisibility(View.GONE);
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", userId); // Pass user ID if necessary
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(getContext()).add(stringRequest);
+    }
+
+
+    private BitmapDescriptor getBitmapDescriptorFromVector(int vectorResId) {
+        VectorDrawable vectorDrawable = (VectorDrawable) AppCompatResources.getDrawable(requireContext(), vectorResId);
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
 
 }

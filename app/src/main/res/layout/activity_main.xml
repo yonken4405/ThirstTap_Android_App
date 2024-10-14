@@ -59,32 +59,6 @@
                     android:textSize="8dp" />
             </LinearLayout>
 
-            <!-- History Icon -->
-            <LinearLayout
-                android:id="@+id/nav_history"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/history_icon"
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:background="@drawable/ripple"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_history" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="History"
-                    android:textColor="@android:color/white"
-                    android:textSize="8dp" />
-            </LinearLayout>
-
             <!-- Order Icon -->
             <LinearLayout
                 android:id="@+id/nav_order"
@@ -107,6 +81,32 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Order"
+                    android:textColor="@android:color/white"
+                    android:textSize="8dp" />
+            </LinearLayout>
+
+            <!-- History Icon -->
+            <LinearLayout
+                android:id="@+id/nav_history"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/history_icon"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/ripple"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="History"
                     android:textColor="@android:color/white"
                     android:textSize="8dp" />
             </LinearLayout>

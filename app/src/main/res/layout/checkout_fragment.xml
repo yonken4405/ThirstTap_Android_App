@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
     android:background="@color/BottomSheetBg">
 
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/blueFont"
+        android:visibility="gone" />
+
+
     <RelativeLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
@@ -18,11 +29,10 @@
             android:id="@+id/back_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:scaleType="fitCenter"
-            android:background="@null"
-            android:src="@drawable/back_btn"
             android:layout_alignParentBottom="true"
-            />
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back_btn" />
 
         <TextView
             android:id="@+id/station_name"
@@ -40,11 +50,11 @@
 
 
     <ImageView
-        android:elevation="4dp"
         android:layout_width="200dp"
         android:layout_height="166dp"
         android:layout_gravity="right"
         android:background="@null"
+        android:elevation="4dp"
         android:scaleType="fitCenter"
         android:src="@drawable/order_bubble1" />
 
@@ -52,14 +62,15 @@
         android:layout_width="216dp"
         android:layout_height="315.3dp"
         android:layout_gravity="left|center"
+        android:layout_marginTop="100dp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/order_bubble2" />
 
     <ScrollView
-        android:layout_marginTop="80dp"
         android:layout_width="match_parent"
-        android:layout_height="620dp">
+        android:layout_height="620dp"
+        android:layout_marginTop="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,8 +78,8 @@
             android:gravity="left"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingBottom="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
 
 
             <LinearLayout
@@ -106,8 +117,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginRight="10dp"
-                    android:scaleType="fitCenter"
                     android:gravity="center"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/calendar_ic" />
 
                 <TextView
@@ -127,7 +138,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="right"
-                    android:text="Change"
+                    android:text="Select"
                     android:textColor="@color/blueFont"
                     android:textSize="12sp" />
 
@@ -145,10 +156,81 @@
                 android:textColor="@color/gray"
                 android:textSize="12sp" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/address_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/baseline_location_pin_small"
+                        android:drawablePadding="10dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="left"
+                        android:text="Delivery Address"
+                        android:textColor="@color/blueFont"
+                        android:textSize="14sp" />
+
+
+                    <TextView
+                        android:id="@+id/delivery_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="35dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="left"
+                        android:text="Address"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/additional_layout"
+                    style="@style/TextInputLayoutColors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="Additional Info (Optional)"
+                    android:textColorHint="@color/InputText"
+                    app:boxStrokeErrorColor="@color/red"
+                    app:errorEnabled="false"
+                    app:errorIconDrawable="@null"
+                    app:errorTextColor="@color/red"
+                    app:startIconDrawable="@drawable/baseline_chat_bubble_outline_24"
+                    app:startIconTint="@color/gray">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/additional_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:imeOptions="actionDone"
+                        android:inputType="textMultiLine"
+                        android:lines="2"
+                        android:paddingStart="50dp"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/order_summary_background"
                 android:orientation="vertical"
                 android:paddingTop="16dp">
@@ -163,20 +245,32 @@
                     android:textColor="@color/blueFont"
                     android:textSize="14sp" />
 
-               <LinearLayout
-                   android:orientation="vertical"
-                   android:layout_below="@+id/orderSummary"
-                   android:id="@+id/order_summary_container"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   />
+                <TextView
+                    android:id="@+id/clear_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="25dp"
+                    android:layout_toRightOf="@+id/orderSummary"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="right"
+                    android:text="Clear cart"
+                    android:textColor="@color/blueFont"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/order_summary_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/orderSummary"
+                    android:orientation="vertical" />
 
                 <Button
-                    android:layout_below="@+id/order_summary_container"
                     android:id="@+id/add_order_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
+                    android:layout_below="@+id/order_summary_container"
                     android:layout_alignParentEnd="true"
                     android:fontFamily="@font/montserrat_medium"
                     android:text="Add more items"
@@ -195,12 +289,12 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:drawableStart="@drawable/payment_ic_24"
-                    android:drawablePadding="5dp"
                     android:id="@+id/itemTotalTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
+                    android:drawableStart="@drawable/payment_ic_24"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/montserrat_bold"
                     android:text="Payment Details"
                     android:textColor="@color/white"
@@ -221,24 +315,24 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:gravity="right"
-                        android:layout_weight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="₱"
+                        android:layout_weight="1"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="₱"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/merchandise_subtotal_tv"
-                        android:gravity="right"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="150"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="150"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -256,24 +350,24 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:gravity="right"
-                        android:layout_weight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="₱"
+                        android:layout_weight="1"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="₱"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/shipping_subtotal_tv"
-                        android:gravity="right"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="50"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="50"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
 
@@ -291,30 +385,30 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:gravity="right"
-                        android:layout_weight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="₱"
+                        android:layout_weight="1"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="₱"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/convenience_fee_tv"
-                        android:gravity="right"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="50"
                         android:fontFamily="@font/montserrat_medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="50"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -325,31 +419,308 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:gravity="right"
-                        android:layout_weight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="₱"
+                        android:layout_weight="1"
                         android:fontFamily="@font/montserrat_bold"
-                        android:textSize="14sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="₱"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/total_payment_tv"
-                        android:gravity="right"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="250"
                         android:fontFamily="@font/montserrat_bold"
-                        android:textSize="14sp"
-                        android:textColor="@color/white"/>
+                        android:gravity="right"
+                        android:text="250"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
                 </LinearLayout>
-
 
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/order_summary_background"
+                android:orientation="vertical"
+                android:paddingVertical="16dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/wallet_ic" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="Payment Option"
+                        android:textColor="@color/blueFont"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#D1D0D0" />
+
+                <LinearLayout
+                    android:id="@+id/payment_method_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <!-- COD Option -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp">
+
+                        <ImageView
+                            android:layout_marginTop="8dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="top"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/cod_ic" />
+
+                        <LinearLayout
+                            android:layout_marginTop="4dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Cash on Delivery (COD)"
+                                android:textColor="@color/blueFont"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Pay cash on delivery for your purchase when it arrives at your doorstep."
+                                android:textColor="@color/gray"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/cod_radio"
+                            android:layout_width="28dp"
+                            android:layout_height="60dp"
+                            android:gravity="top"
+                            android:layout_gravity="end|top"
+                            app:buttonTint="@color/blueFont"
+                            app:useMaterialThemeColors="false"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#D1D0D0" />
+
+                    <!-- GCASH Option -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp">
+
+                        <ImageView
+                            android:layout_marginTop="8dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="top"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ewallet_ic" />
+
+                        <LinearLayout
+                            android:layout_marginTop="4dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Pay Using E-Wallet"
+                                android:textColor="@color/blueFont"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Pay using supported e-wallet payment methods such as G-cash,
+Maya, and more."
+                                android:textColor="@color/gray"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="3dp">
+
+                                <ImageView
+                                    android:layout_width="22.63dp"
+                                    android:layout_height="28.29dp"
+                                    android:layout_gravity="top"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/gcash_logo" />
+
+                                <ImageView
+                                    android:layout_marginHorizontal="2.5dp"
+                                    android:layout_width="20.5dp"
+                                    android:layout_height="20.5dp"
+                                    android:layout_gravity="center"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/paymaya_ic" />
+
+                                <ImageView
+                                    android:layout_width="22.63dp"
+                                    android:layout_height="28.29dp"
+                                    android:layout_gravity="top"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/gcash_logo" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/gcash_radio"
+                            android:layout_width="28dp"
+                            android:layout_height="80dp"
+                            android:gravity="top"
+                            android:layout_gravity="end|top"
+                            app:buttonTint="@color/blueFont"
+                            app:useMaterialThemeColors="false"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#D1D0D0" />
+
+                    <!-- Card Option -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp">
+
+                        <ImageView
+                            android:layout_marginTop="8dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="top"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/credit_card_ic" />
+
+                        <LinearLayout
+                            android:layout_marginTop="4dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Pay Using Card"
+                                android:textColor="@color/blueFont"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="Pay using supported Debit/Credit cards such as Mastercard and Visa are supported."
+                                android:textColor="@color/gray"
+                                android:textSize="10sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="8dp">
+
+                                <ImageView
+                                    android:layout_width="33.93dp"
+                                    android:layout_height="19dp"
+                                    android:layout_gravity="top"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/visa_ic" />
+
+                                <ImageView
+                                    android:layout_marginHorizontal="5dp"
+                                    android:layout_width="24.47dp"
+                                    android:layout_height="19dp"
+                                    android:layout_gravity="center"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/mastercard_ic" />
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/card_radio"
+                            android:layout_width="28dp"
+                            android:layout_height="80dp"
+                            android:gravity="top"
+                            android:layout_gravity="end|top"
+                            app:buttonTint="@color/blueFont"
+                            app:useMaterialThemeColors="false"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
 
             <Button
@@ -358,7 +729,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/blueFont"
+                android:elevation="2dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
@@ -369,7 +742,6 @@
 
 
         </LinearLayout>
-
 
 
     </ScrollView>

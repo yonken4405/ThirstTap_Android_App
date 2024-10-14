@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.thirsttap.AccountPage.WorkWithUsFragment;
 import com.example.thirsttap.AddressesPage.Address;
 import com.example.thirsttap.AddressesPage.AddressListFragment;
 import com.example.thirsttap.OrderPage.OrderFragment;
@@ -31,9 +32,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HomeFragment extends Fragment {
-    Button orderNow;
-    TextView addressDisplay, nameDisplay;
-    String userId, email, name, phoneNum;
+    private Button orderNow;
+    private TextView addressDisplay, nameDisplay;
+    private String userId, email, name, phoneNum;
+    private LinearLayout ad1;
+    private ProgressBar loader;
 
 
     @Nullable
@@ -41,10 +44,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.home_screen_fragment, container, false);
+        loader = view.findViewById(R.id.loader);
 
         orderNow = view.findViewById(R.id.order_now_button);
         addressDisplay = view.findViewById(R.id.address_display);
         nameDisplay = view.findViewById(R.id.user_name);
+        ad1 = view.findViewById(R.id.partner_ad);
 
 
         // Retrieve user profile data from SharedPreferences
@@ -64,6 +69,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddressListFragment fragment = new AddressListFragment();
+                Bundle args = new Bundle();
+                args.putString("sourceFragment", "homeFragment"); // Pass the source fragment
+                fragment.setArguments(args);
                 getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
             }
         });
@@ -77,18 +85,29 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        ad1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WorkWithUsFragment fragment = new WorkWithUsFragment();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+            }
+        });
+
 
 
         return view;
     }
 
     public void fetchAddressDisplay() {
+        loader.setVisibility(View.VISIBLE);
+
         String url = "https://thirsttap.scarlet2.io/Backend/fetchDefaultAddress.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loader.setVisibility(View.GONE);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
 
@@ -124,6 +143,7 @@ public class HomeFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loader.setVisibility(View.GONE);
                 error.printStackTrace();
             }
         }) {

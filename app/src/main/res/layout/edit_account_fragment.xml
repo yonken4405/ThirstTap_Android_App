@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/blueFont"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="192.22dp"
         android:layout_height="246.87dp"
@@ -155,7 +165,8 @@
             android:text="Save Changes"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:elevation="2dp"/>
 
 
 

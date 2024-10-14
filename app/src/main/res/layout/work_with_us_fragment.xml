@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BottomSheetBg"
+    >
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:background="@color/BottomSheetBg"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:src="@drawable/back_btn"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Work With Us"
+            android:textColor="@color/blueFont"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:elevation="4dp"
+        android:layout_width="180dp"
+        android:layout_height="146dp"
+        android:src="@drawable/order_bubble1"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_gravity="right"
+        />
+
+    <ScrollView
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+
+            <RelativeLayout
+                android:layout_marginHorizontal="20dp"
+                android:orientation="vertical"
+                android:layout_width="325dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/line1"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/josiahBlack"
+                    android:textSize="15sp"
+                    android:layout_width="325dp"
+                    android:layout_height="wrap_content"
+                    android:text="Ready to enhance your water refilling station's "/>
+
+                <TextView
+                    android:layout_below="@+id/line1"
+                    android:id="@+id/line2"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/josiahBlack"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="operations?"/>
+
+                <TextView
+                    android:layout_below="@+id/line1"
+                    android:layout_toRightOf="@+id/line2"
+                    android:id="@+id/line3"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Join"/>
+
+                <TextView
+                    android:layout_below="@+id/line1"
+                    android:layout_toRightOf="@+id/line3"
+                    android:id="@+id/line4"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/josiahBlack"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" ThirstTap "/>
+
+                <TextView
+                    android:layout_below="@+id/line1"
+                    android:layout_toRightOf="@+id/line4"
+                    android:id="@+id/line5"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="today! We're"/>
+
+                <TextView
+                    android:layout_below="@+id/line2"
+                    android:id="@+id/line6"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:layout_width="325dp"
+                    android:layout_height="wrap_content"
+                    android:text="inviting dedicated water refilling stations in Cebu committed to providing clean drinking water to their communities to apply. Don’t miss this chance to expand your reach and impact!"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Benefits of using ThirstTap"
+                android:textSize="20sp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@color/blueFont"/>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:fontFamily="@font/nunito_medium"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ThirstTap provides a range of advantages for water refilling stations, including:"/>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Convenience: "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" A user-friendly app for "/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="seamless ordering and flexible delivery options tailored for your customers."/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Quality Products: "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Access to premium filtered"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="or purified water and a variety of related products to meet your customers' needs."/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cost-Effective:  "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Competitive pricing with "/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="potential discounts to help maximize your profitability."/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sustainability: "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Implementation of eco-friendly"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="practices and water conservation initiatives to enhance your business’s environmental responsibility."/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Customer Support: "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reliable assistance and"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="feedback mechanisms to ensure your operations run smoothly and your customers are satisfied."/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bullet_ic_24"/>
+                    <TextView
+                        android:layout_marginLeft="3dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/josiahBlack"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Community Engagement: "/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Support for local"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_marginLeft="24dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="businesses and involvement in community programs that strengthen your ties with the local area."/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito_medium"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Our water delivery app streamlines operations, increases satisfaction, and boosts your bottom line, with cost savings easily outweighing any fees."/>
+
+            
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How to become a supplier "
+                android:textSize="20sp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@color/blueFont"/>
+            
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:layout_width="165dp"
+                android:layout_height="145dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/wwu1"/>
+
+            <TextView
+                android:gravity="center"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/blueFont"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Fill out the supplier form "/>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_medium"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Complete the supplier signup form as completely as possible, and upload your business requirements."/>
+
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:layout_width="165dp"
+                android:layout_height="135.57dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/wwu2"/>
+
+            <TextView
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/blueFont"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Meeting and introduction"/>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_medium"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Someone from our sales team will reach out to you to schedule an appointment for an introduction and explains the apps and rules "/>
+
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:layout_width="185dp"
+                android:layout_height="185dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/wwu3"/>
+
+            <TextView
+                android:gravity="center"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/blueFont"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. Contract signing "/>
+
+            <TextView
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_medium"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Once all requirements are submitted and the contract signed, you are ready for business! Your station will be added to the app and customers can order from your station."/>
+
+            <LinearLayout
+                android:layout_marginTop="40dp"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/blueFont"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partner with Us Today!"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Join ThirstTap to enhance your water refilling station's operations! Our online water delivery service can streamline your business and grow your customer base."/>
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="By partnering with us, you'll gain access to a user-friendly platform, quality products, and exceptional support."/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ready to get started? "/>
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fill out the form below, "/>
+                </LinearLayout>
+                <TextView
+                    android:fontFamily="@font/nunito_medium"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="and we'll contact you within 5 working days!"/>
+
+                <Button
+                    android:id="@+id/form_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Fill Out Supplier Form"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blueFont"
+                    android:textSize="13sp"
+                    android:elevation="2dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
+
+
