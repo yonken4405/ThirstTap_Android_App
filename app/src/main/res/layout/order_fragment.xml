@@ -6,15 +6,25 @@
     android:background="@color/BottomSheetBg"
     >
 
-    <ProgressBar
+    <LinearLayout
         android:id="@+id/loader"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:elevation="10dp"
-        android:indeterminateTint="@color/blueFont"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:background="@color/BottomSheetBg"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/loader_gif"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blueFont"
+            />
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/title_bar"
@@ -172,7 +182,7 @@
                                 android:paddingRight="8dp"
                                 android:paddingBottom="17dp"
                                 android:text="Alkaline"
-                                android:textColor="@color/gray"
+                                android:textColor="@color/blueFont"
                                 android:textSize="14sp" />
 
                             <LinearLayout
@@ -198,15 +208,15 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
-                                    android:text="Purified water with a high pH value (pH above 7 is considered alkaline, below acidic, and 7 is considered neutral)."
+                                    android:text="Alkaline water has a higher pH than regular water and is believed to help balance the body's acidity and improve hydration."
                                     android:textColor="@color/white"
                                     android:textSize="10sp" />
 
                             </LinearLayout>
 
-                            <!-- Distilled RadioButton -->
+                            <!-- Purified RadioButton -->
                             <RadioButton
-                                android:id="@+id/radio_distilled"
+                                android:id="@+id/radio_purified"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
@@ -220,12 +230,12 @@
                                 android:paddingTop="8dp"
                                 android:paddingRight="8dp"
                                 android:paddingBottom="17dp"
-                                android:text="Distilled"
-                                android:textColor="@color/gray"
+                                android:text="Purified"
+                                android:textColor="@color/blueFont"
                                 android:textSize="14sp" />
 
                             <LinearLayout
-                                android:id="@+id/desc_distilled"
+                                android:id="@+id/desc_purified"
                                 android:layout_width="160dp"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/water_description_background"
@@ -239,7 +249,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="left"
                                     android:fontFamily="@font/montserrat_extrabold"
-                                    android:text="Distilled"
+                                    android:text="Purified"
                                     android:textColor="@color/white"
                                     android:textSize="14sp" />
 
@@ -247,7 +257,105 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
-                                    android:text="Purified water with a high pH value (pH above 7 is considered alkaline, below acidic, and 7 is considered neutral)."
+                                    android:text="Purified water undergoes treatment processes to remove impurities and contaminants, resulting in very low levels of dissolved solids."
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <!-- Spring RadioButton -->
+                            <RadioButton
+                                android:id="@+id/radio_spring"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/selector_water_type"
+                                android:button="@null"
+                                android:drawableBottom="@drawable/ic_alkaline_water"
+                                android:drawablePadding="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:gravity="center"
+                                android:paddingLeft="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="17dp"
+                                android:text="Spring"
+                                android:textColor="@color/blueFont"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:id="@+id/desc_spring"
+                                android:layout_width="160dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/water_description_background"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="8dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:fontFamily="@font/montserrat_extrabold"
+                                    android:text="Spring"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Spring water is sourced from natural springs and retains its natural minerals, providing a unique taste and composition."
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+                            <!-- Mineral RadioButton -->
+                            <RadioButton
+                                android:id="@+id/radio_mineral"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/selector_water_type"
+                                android:button="@null"
+                                android:drawableBottom="@drawable/ic_alkaline_water"
+                                android:drawablePadding="3dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:gravity="center"
+                                android:paddingLeft="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="17dp"
+                                android:text="Mineral"
+                                android:textColor="@color/blueFont"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:id="@+id/desc_mineral"
+                                android:layout_width="160dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/water_description_background"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="8dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:fontFamily="@font/montserrat_extrabold"
+                                    android:text="Mineral"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Mineral water contains beneficial dissolved minerals like calcium and magnesium, often sourced from springs and marketed for its health benefits."
                                     android:textColor="@color/white"
                                     android:textSize="10sp" />
 
@@ -322,7 +430,7 @@
                             android:paddingTop="8dp"
                             android:paddingBottom="12dp"
                             android:text="5.00 Gal Round"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/blueFont"
                             android:textSize="10sp" />
 
                         <LinearLayout
@@ -379,7 +487,7 @@
                             android:paddingTop="8dp"
                             android:paddingBottom="12dp"
                             android:text="5.00 Gal Slim"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/blueFont"
                             android:textSize="10sp" />
 
                         <LinearLayout
@@ -441,7 +549,7 @@
                             android:paddingTop="8dp"
                             android:paddingBottom="12dp"
                             android:text="2.50 Gal Slim"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/blueFont"
                             android:textSize="10sp" />
 
                         <LinearLayout
@@ -522,8 +630,8 @@
 
                         <LinearLayout
                             android:id="@+id/new_container_desc"
-                            android:layout_width="250dp"
-                            android:layout_height="95dp"
+                            android:layout_width="200dp"
+                            android:layout_height="match_parent"
                             android:padding="16dp"
                             android:orientation="vertical"
                             android:background="@drawable/container_status_background">
@@ -540,10 +648,10 @@
 
                             <TextView
                                 android:id="@+id/new_container_description"
-                                android:layout_width="228dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Choose the size of water container that fits your requirements from the following options."
+                                android:text="Choose the water container size that suits your needs."
                                 android:textColor="@color/white"
                                 android:textSize="11.2sp"
                                 />
@@ -560,8 +668,8 @@
                         <LinearLayout
                             android:id="@+id/exchange_container_desc"
                             android:layout_marginLeft="10dp"
-                            android:layout_width="250dp"
-                            android:layout_height="95dp"
+                            android:layout_width="200dp"
+                            android:layout_height="match_parent"
                             android:padding="16dp"
                             android:orientation="vertical"
                             android:background="@drawable/container_status_background">
@@ -578,10 +686,10 @@
 
                             <TextView
                                 android:id="@+id/ex_container_description"
-                                android:layout_width="228dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Supplier will exchange your containers with theirs upon delivery."
+                                android:text="Containers will be exchanged upon delivery."
                                 android:textColor="@color/white"
                                 android:textSize="11.2sp"
                                 />

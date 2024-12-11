@@ -25,6 +25,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.thirsttap.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +45,7 @@ public class CancelledOrdersFragment extends Fragment {
     private ImageView arrowAscending;
     private ImageView arrowDescending;
     private boolean isAscending = true; // Track the current sort order
-    private String currentSortOrder = "asc"; // Store the current sort order
+    private String currentSortOrder = "desc"; // Store the current sort order
 
     @Nullable
     @Override
@@ -51,10 +53,12 @@ public class CancelledOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         loader = view.findViewById(R.id.loader);
         searchEditText = view.findViewById(R.id.transaction_et);
+        // Initialize TextInputLayout and retrieve the current end icon
+        TextInputLayout textInputLayout = view.findViewById(R.id.et_search);
 
-        // Initialize arrow views
-        arrowAscending = view.findViewById(R.id.arrow_ascending);
-        arrowDescending = view.findViewById(R.id.arrow_descending);
+//        // Initialize arrow views
+//        arrowAscending = view.findViewById(R.id.arrow_ascending);
+//        arrowDescending = view.findViewById(R.id.arrow_descending);
 
         // Retrieve user profile data from SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
@@ -75,19 +79,31 @@ public class CancelledOrdersFragment extends Fragment {
             fetchOrders("Cancelled", currentSortOrder);
         });
 
-        // Set up arrow click listeners
-        arrowAscending.setOnClickListener(v -> {
-            currentSortOrder = "asc";
-            fetchOrders("Cancelled", currentSortOrder);
-            arrowAscending.setVisibility(View.GONE);
-            arrowDescending.setVisibility(View.VISIBLE);
-        });
+//        // Set up arrow click listeners
+//        arrowAscending.setOnClickListener(v -> {
+//            currentSortOrder = "asc";
+//            fetchOrders("Cancelled", currentSortOrder);
+//            arrowAscending.setVisibility(View.GONE);
+//            arrowDescending.setVisibility(View.VISIBLE);
+//        });
+//
+//        arrowDescending.setOnClickListener(v -> {
+//            currentSortOrder = "desc";
+//            fetchOrders("Cancelled", currentSortOrder);
+//            arrowAscending.setVisibility(View.VISIBLE);
+//            arrowDescending.setVisibility(View.GONE);
+//        });
 
-        arrowDescending.setOnClickListener(v -> {
-            currentSortOrder = "desc";
+        // Set up arrow click listeners to change the icon dynamically
+        textInputLayout.setEndIconOnClickListener(v -> {
+            if (currentSortOrder.equals("asc")) {
+                currentSortOrder = "desc";
+                textInputLayout.setEndIconDrawable(R.drawable.ascending_arrow);  // Change to ascending arrow
+            } else {
+                currentSortOrder = "asc";
+                textInputLayout.setEndIconDrawable(R.drawable.descending_arrow);  // Change to descending arrow
+            }
             fetchOrders("Cancelled", currentSortOrder);
-            arrowAscending.setVisibility(View.VISIBLE);
-            arrowDescending.setVisibility(View.GONE);
         });
 
         // Set up search listener

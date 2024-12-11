@@ -1,5 +1,9 @@
 package com.example.thirsttap.ClientOnBoarding;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,9 +16,11 @@ import androidx.viewpager2.widget.*;
 
 import com.example.thirsttap.AccountPage.TermsAndConditionsFragment;
 import com.example.thirsttap.Login.LoginFragment;
+import com.example.thirsttap.OrderHistoryPage.OrderHistoryFragment;
 import com.example.thirsttap.R;
 
 import com.google.android.material.tabs.*;
+import com.google.firebase.FirebaseApp;
 
 public class OnboardingActivity extends AppCompatActivity {
 
@@ -22,10 +28,22 @@ public class OnboardingActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TabLayoutMediator tabLayoutMediator;
 
+    private static final int NOTIFICATION_PERMISSION_CODE = 100;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+        FirebaseApp.initializeApp(this);
+
+        // Check for notification permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
+            }
+        }
+
 
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
@@ -99,5 +117,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
+
 }
 

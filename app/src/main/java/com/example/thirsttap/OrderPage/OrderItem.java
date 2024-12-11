@@ -13,12 +13,28 @@ public class OrderItem {
     // Constructor
     public OrderItem(String waterType, String containerSize, String containerStatus, int quantity, double pricePerItem, double newContainerPrice) {
         this.id = ++idCounter; // Increment and assign unique ID
-        this.waterType = waterType;
+        this.waterType = capitalizeFirstLetter(waterType);
         this.containerSize = containerSize;
         this.containerStatus = containerStatus;
         this.quantity = Math.max(quantity, 1); // Ensure at least 1 item
         this.pricePerItem = Math.max(pricePerItem, 0.0); // Ensure non-negative price
         this.newContainerPrice = Math.max(newContainerPrice, 0.0); // Ensure non-negative new container price
+    }
+    public boolean isEqual(OrderItem other) {
+        if (other == null) {
+            return false;
+        }
+        return this.waterType.equals(other.waterType) &&
+                this.containerSize.equals(other.containerSize) &&
+                this.containerStatus.equals(other.containerStatus);
+    }
+
+    // Utility method to capitalize the first letter
+    private String capitalizeFirstLetter(String input) {
+        if (input == null || input.isEmpty()) {
+            return input; // Return as is if null or empty
+        }
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 
     @Override

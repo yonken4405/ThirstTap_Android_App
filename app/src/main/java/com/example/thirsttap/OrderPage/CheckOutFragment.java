@@ -45,6 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Date;
+import java.util.TimeZone;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -71,7 +73,7 @@ public class CheckOutFragment extends Fragment {
     private double totalPriceToPay = 0;
     private String formattedDate2;
     private String userId, email, name, phoneNum;
-    private TextView stationAddressTextView, stationNameTextView, stationScheduleTextView, deliveryAddress, itemPriceTv, containerPriceTv;
+    private TextView stationAddressTextView, stationNameTextView, stationScheduleTextView, deliveryAddress, itemPriceTv, newContainerPriceTv;
     private String stationName, stationAddress, stationSchedule, stationId, paymentMethod, chosenAddress, defaultAddressId, currentDate ;
     private LinearLayout addressLayout;
     private int addressId;
@@ -119,6 +121,23 @@ public class CheckOutFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d", Locale.ENGLISH);
         String formattedDate = sdf.format(calendar.getTime());
 
+//        // Observe the selected date from the ViewModel
+//        orderViewModel.getSelectedDate().observe(getViewLifecycleOwner(), value -> {
+//            if (value == null || value.isEmpty()) {
+//                // Set current date as the default
+//                date.setText(formattedDate);
+//
+//                // Prepare the date for uploading to the database in the format "YYYY-MM-DD"
+//                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+//                formattedDate2 = sdf2.format(calendar.getTime());  // This will give you "2024-10-01"
+//            } else {
+//                // Use the selected date
+//                formattedDate2 = value;
+//                date.setText(formattedDate2);
+//                Log.d("datez",value );
+//            }
+//        });
+
         // Observe the selected date from the ViewModel
         orderViewModel.getSelectedDate().observe(getViewLifecycleOwner(), value -> {
             if (value == null || value.isEmpty()) {
@@ -132,10 +151,9 @@ public class CheckOutFragment extends Fragment {
                 // Use the selected date
                 formattedDate2 = value;
                 date.setText(formattedDate2);
-                Log.d("datez",value );
+                Log.d("datez", value);
             }
         });
-
 
         if (addressId != -1) {
             // The addressId exists; you can use it
@@ -160,10 +178,53 @@ public class CheckOutFragment extends Fragment {
         });
 
         orderViewModel.getStationSchedule().observe(getViewLifecycleOwner(), value -> {
+            // Get the station schedule
             stationSchedule = value;
-            stationScheduleTextView.setText(stationSchedule);
-            Log.d("sched", stationSchedule);
+
+            // Extract the day of the week from the date TextView's text (e.g., "Friday, November 23")
+            String selectedDateText = date.getText().toString();  // Use the date TextView's text
+
+            // Get the day of the week from the selected date
+            String selectedDay = getDayOfWeekFromDateText(selectedDateText);
+
+            try {
+                Date date = sdf.parse(selectedDateText);
+                if (date != null) {
+                    calendar.setTime(date);
+                    calendar.add(Calendar.DAY_OF_MONTH, -2);  // Subtract two days
+                    selectedDay = new SimpleDateFormat("EEE", Locale.ENGLISH).format(calendar.getTime());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            // Filter the schedule based on the calculated day two days prior
+            String[] scheduleLines = stationSchedule.split("\n");  // Split by newline to get each day's schedule
+
+            // Initialize flag to track if the schedule for the selected day is found
+            boolean dayFound = false;
+
+            // Loop through each schedule line and find the matching day
+            for (String line : scheduleLines) {
+                if (line.startsWith(selectedDay)) {
+                    // Display the schedule for the selected day
+                    stationScheduleTextView.setText(line);
+                    Log.d("sched", line);  // Log the selected day's schedule
+                    dayFound = true;
+                    break;  // Exit the loop once the matching day is found
+                }
+            }
+
+            // If no matching day is found, clear the text view or show a default message
+            if (!dayFound) {
+                stationScheduleTextView.setText("Schedule not found for the selected day.");
+            }
         });
+//        orderViewModel.getStationSchedule().observe(getViewLifecycleOwner(), value -> {
+//            stationSchedule = value;
+//            stationScheduleTextView.setText(stationSchedule);
+//            Log.d("sched", stationSchedule);
+//        });
 
         orderViewModel.getStationAddress().observe(getViewLifecycleOwner(), value -> {
             stationAddress = value;
@@ -209,10 +270,25 @@ public class CheckOutFragment extends Fragment {
                 TextView containerSizeTextView = itemView.findViewById(R.id.order_container_size);
                 quantityTextView = itemView.findViewById(R.id.order_quantity);
                 itemPriceTv = itemView.findViewById(R.id.order_item_price);
-                containerPriceTv = itemView.findViewById(R.id.new_container_price);
+                newContainerPriceTv = itemView.findViewById(R.id.new_container_price);
                 totalPriceTextView = itemView.findViewById(R.id.total);
                 plusBtn = itemView.findViewById(R.id.plus_button);
                 minusBtn = itemView.findViewById(R.id.minus_button);
+                TextView containerPriceTv = itemView.findViewById(R.id.order_item_price);
+
+
+                // Set values for the views
+                waterTypeTextView.setText(item.getWaterType());
+                containerSizeTextView.setText(item.getContainerSize());
+                quantityTextView.setText(String.valueOf(item.getQuantity()));
+
+                double itemPrice = item.getPricePerItem(); // Assuming this is the price per unit (not including container)
+                double totalPrices = item.getTotalPrice(); // Assuming this is the price per unit (not including container)
+                double newContainerPrice = item.getNewContainerPrice(); // New container price
+
+                // Display the prices
+                containerPriceTv.setText(String.valueOf(itemPrice));
+                newContainerPriceTv.setText(String.valueOf(newContainerPrice));
 
                 quantityTextView.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -259,9 +335,6 @@ public class CheckOutFragment extends Fragment {
                 containerSizeTextView.setText(item.getContainerSize());
                 quantityTextView.setText(String.valueOf(item.getQuantity()));
                 totalPriceTextView.setText(String.valueOf(item.getTotalPrice()));
-
-
-
 
                 // Initialize item view
                 initializeItemView(item, quantityTextView, totalPriceTextView);
@@ -366,9 +439,6 @@ public class CheckOutFragment extends Fragment {
         });
 
 
-
-
-
         try {
             placeOrderBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -402,7 +472,7 @@ public class CheckOutFragment extends Fragment {
             View itemView = orderItemsLayout.getChildAt(i);
             EditText quantityTextView = itemView.findViewById(R.id.order_quantity);
             TextView itemPriceTv = itemView.findViewById(R.id.order_item_price);
-            TextView containerPriceTv = itemView.findViewById(R.id.new_container_price);
+            TextView newContainerPriceTv = itemView.findViewById(R.id.new_container_price);
             TextView totalPriceTextView = itemView.findViewById(R.id.total);
 
             // Get the quantity entered by the user
@@ -415,8 +485,9 @@ public class CheckOutFragment extends Fragment {
             }
 
             // Assuming you have a way to get the price for the order item
-            double pricePerUnit = Double.parseDouble(itemPriceTv.getText().toString()) + Double.parseDouble(containerPriceTv.getText().toString()); // Adjust this based on your logic
+            double pricePerUnit = Double.parseDouble(itemPriceTv.getText().toString()) + Double.parseDouble(newContainerPriceTv.getText().toString()); // Adjust this based on your logic
             double totalPrice = quantity * pricePerUnit;
+
 
             // Update total price for this item
             totalPriceTextView.setText(String.valueOf(totalPrice));
@@ -459,6 +530,9 @@ public class CheckOutFragment extends Fragment {
 
                     // Set the selected date in the OrderViewModel
                     OrderViewModel.setSelectedDate(formattedDate); // Store selected date
+
+                    // Update the station schedule based on the selected day
+                    updateStationSchedule(formattedDate); // Trigger schedule update based on the selected date
                 }, year, month, day);
 
         // Set the minimum date to today
@@ -472,9 +546,75 @@ public class CheckOutFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    // Method to update the station schedule based on the selected date
+    public void updateStationSchedule(String selectedDate) {
+        // Get the day of the week from the selected date (e.g., "Tue", "Mon", "Fri")
+        String selectedDay = getDayOfWeekFromDateText(selectedDate);
+
+        // Calculate the day two days prior
+        Calendar calendar = Calendar.getInstance();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d", Locale.ENGLISH);
+            Date date = sdf.parse(selectedDate);
+            if (date != null) {
+                calendar.setTime(date);
+                calendar.add(Calendar.DAY_OF_MONTH, -2);  // Subtract two days
+                selectedDay = new SimpleDateFormat("EEE", Locale.ENGLISH).format(calendar.getTime());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Filter the station schedule based on the calculated day two days prior
+        String[] scheduleLines = stationSchedule.split("\n");  // Split by newline to get each day's schedule
+
+        // Initialize flag to track if the schedule for the selected day is found
+        boolean dayFound = false;
+
+        // Loop through each schedule line and find the matching day
+        for (String line : scheduleLines) {
+            if (line.startsWith(selectedDay)) {
+                // Update the stationScheduleTextView with the schedule for the selected day
+                stationScheduleTextView.setText(line);
+                Log.d("sched", line);  // Log the selected day's schedule
+                dayFound = true;
+                break;  // Exit the loop once the matching day is found
+            }
+        }
+
+        // If no matching day is found (e.g., if data is malformed), clear the text view or show a default message
+        if (!dayFound) {
+            stationScheduleTextView.setText("Schedule not found for the selected day.");
+        }
+    }
+
+    // Helper method to get the day of the week from the date string (e.g., "Mon", "Tue", "Fri")
+    private String getDayOfWeekFromDateText(String dateText) {
+        try {
+            // Date format based on the format in the TextView (e.g., "Friday, November 23")
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd", Locale.ENGLISH);
+
+            // Adjust the timezone to match the system's timezone
+            sdf.setTimeZone(TimeZone.getDefault());  // Ensure we're using the default timezone
+
+            // Parse the date from the TextView's text
+            Date date = sdf.parse(dateText);
+
+            // Use Calendar to ensure the correct day is retrieved
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // Format the date to get the day abbreviation (Mon, Tue, Wed, etc.)
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);  // Use "EEE" for abbreviated day
+            return dayFormat.format(calendar.getTime());  // Return the abbreviated day (e.g., "Mon", "Tue", "Fri")
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
 
-    private void createOrder() {
+        private void createOrder() {
         loader.setVisibility(View.VISIBLE);
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
@@ -670,12 +810,16 @@ public class CheckOutFragment extends Fragment {
                     OrderConfirmationPopup popupFragment = new OrderConfirmationPopup();
                     popupFragment.show(getParentFragmentManager(), "full_screen_popup");
 
+
+
                 })
                 .setNegativeButton("No", (dialog, which) -> {
 
                 })
                 .show();
     }
+
+
 
 
     private void updateSubtotal() {

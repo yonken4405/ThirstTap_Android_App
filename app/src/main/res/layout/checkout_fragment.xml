@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:gravity="center"
+                android:gravity="left"
                 android:text="09:00 AM - 05:00 PM"
                 android:textColor="@color/gray"
                 android:textSize="12sp" />
@@ -489,6 +489,7 @@
 
                     <!-- COD Option -->
                     <LinearLayout
+                        android:layout_marginTop="2dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -634,6 +635,7 @@ Maya, and more."
                     </LinearLayout>
 
                     <View
+                        android:layout_marginTop="2dp"
                         android:layout_marginBottom="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"

@@ -42,6 +42,7 @@
 
     <style name="GoogleBtn" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/blueFont</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="CustomErrorText" parent="TextAppearance.AppCompat.Small">

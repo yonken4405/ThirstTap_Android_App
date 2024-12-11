@@ -32,9 +32,12 @@
         app:boxCornerRadiusTopEnd="24dp"
         app:boxCornerRadiusTopStart="24dp"
         app:boxStrokeErrorColor="@color/red"
+        app:endIconDrawable="@drawable/descending_arrow"
+        app:endIconMode="custom"
+        app:endIconTint="@null"
         app:errorEnabled="false"
         app:errorTextColor="@color/red"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:startIconDrawable="@drawable/baseline_search_24"
@@ -52,7 +55,7 @@
             android:textSize="12sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,7 +94,7 @@
             android:src="@drawable/ascending_arrow"
             android:visibility="gone" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

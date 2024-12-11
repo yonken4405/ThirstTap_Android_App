@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
             return view.onApplyWindowInsets(insets);
         });
 
+        // Check for orderid in the intent
+        if (getIntent() != null && getIntent().hasExtra("orderid")) {
+            String orderId = getIntent().getStringExtra("orderid");
+            navigateToFragment(new OrderFragment(), "ORDER_FRAGMENT"); // Navigate to OrderFragment
+        }
+
         // Initialize navigation items
         home = findViewById(R.id.nav_home);
         history = findViewById(R.id.nav_history);
@@ -129,6 +135,31 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide navigation bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null && intent.hasExtra("fragmentToOpen")) {
+            String fragmentName = intent.getStringExtra("fragmentToOpen");
+            // Load the specified fragment
+            loadFragment(fragmentName); // Implement this method to load the fragment
+        }
+    }
+
+    private void loadFragment(String fragmentName) {
+        Fragment fragment = null;
+        switch (fragmentName) {
+            case "OrderHistoryFragment":
+                fragment = new OrderHistoryFragment(); // Replace with your fragment class
+                break;
+            // Add cases for other fragments if needed
+        }
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment) // Replace with your container ID
+                    .commit();
+        }
     }
 
 

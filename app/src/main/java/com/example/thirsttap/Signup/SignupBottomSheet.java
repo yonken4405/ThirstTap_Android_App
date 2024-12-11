@@ -5,6 +5,8 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -52,6 +54,7 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
     private ImageButton backBtn;
     private Button signupBtn;
     private ProgressBar loader;
+    private TextView   requirementUppercase, requirementLowercase, requirementDigit, requirementLength;
 
 
     // URL for the signup endpoint
@@ -80,6 +83,11 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
         numLayout = view.findViewById(R.id.number_layout);
         termsConditions = view.findViewById(R.id.terms_conditions);
         privacyPolicy = view.findViewById(R.id.privacy_policy);
+
+        requirementUppercase = view.findViewById(R.id.requirement_uppercase);
+        requirementLowercase = view.findViewById(R.id.requirement_lowercase);
+        requirementDigit = view.findViewById(R.id.requirement_digit);
+        requirementLength= view.findViewById(R.id.requirement_length);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +181,23 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
 //            return event.getAction() == MotionEvent.ACTION_MOVE;
 //        });
 
+        signupPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No action needed before text changes
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validatePassword(); // Validate on text change
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No action needed after text changes
+            }
+        });
+
 
 
         return view;
@@ -260,25 +285,56 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+
     private boolean validatePassword() {
         String val = signupPassword.getText().toString().trim();
-        String passwordVal = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$"; // Password regex
+        boolean hasUppercase = !val.equals(val.toLowerCase()); // Check for uppercase
+        boolean hasLowercase = !val.equals(val.toUpperCase()); // Check for lowercase
+        boolean hasDigit = val.matches(".*\\d.*"); // Check for digit
+        boolean hasValidLength = val.length() >= 8; // Check for length
 
-        if (val.isEmpty()) {
-            passError.setErrorEnabled(true);
-            passError.setError("Field cannot be empty");
-            return false;
-        } else if (!val.matches(passwordVal)) {
-            Log.d("passwordlength", "pass length not enough");
-            passError.setErrorEnabled(true);  // Ensure error display is explicitly enabled
-            passError.setError("Password must have at least:\n- 1 uppercase letter\n- 1 lowercase letter\n- 1 digit\n- 8 characters");
-            return false;
-        } else {
-            passError.setError(null);
-            passError.setErrorEnabled(false);  // Explicitly disable error message when valid
-            return true;
-        }
+        boolean isValid = true;
+
+        // Reset all requirements to red initially
+        requirementUppercase.setTextColor(getResources().getColor(R.color.red));
+        requirementLowercase.setTextColor(getResources().getColor(R.color.red));
+        requirementDigit.setTextColor(getResources().getColor(R.color.red));
+        requirementLength.setTextColor(getResources().getColor(R.color.red));
+
+
+            // Check uppercase
+            if (!hasUppercase) {
+                isValid = false; // Not valid if uppercase requirement is not met
+            } else {
+                requirementUppercase.setTextColor(getResources().getColor(R.color.blueFont)); // Change to blue
+            }
+
+            // Check lowercase
+            if (!hasLowercase) {
+                isValid = false; // Not valid if lowercase requirement is not met
+            } else {
+                requirementLowercase.setTextColor(getResources().getColor(R.color.blueFont)); // Change to blue
+            }
+
+            // Check digit
+            if (!hasDigit) {
+                isValid = false; // Not valid if digit requirement is not met
+            } else {
+                requirementDigit.setTextColor(getResources().getColor(R.color.blueFont)); // Change to blue
+            }
+
+            // Check length
+            if (!hasValidLength) {
+                isValid = false; // Not valid if length requirement is not met
+            } else {
+                requirementLength.setTextColor(getResources().getColor(R.color.blueFont)); // Change to blue
+            }
+
+
+        return isValid;
     }
+
+
 
 
 
@@ -292,9 +348,9 @@ public class SignupBottomSheet extends BottomSheetDialogFragment {
             return false;
         } else if (!val.equals(val2)) {
             conPassError.setErrorEnabled(true);
-            passError.setErrorEnabled(true);
+
             conPassError.setError("Passwords do not match");
-            passError.setError("Passwords do not match");
+
             return false;
         } else {
             conPassError.setError(null);

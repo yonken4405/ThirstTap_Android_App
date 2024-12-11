@@ -1,8 +1,11 @@
 package com.example.thirsttap.Login;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -25,6 +29,7 @@ import com.example.thirsttap.AddressesPage.AddressActivity;
 import com.example.thirsttap.ClientOnBoarding.OnboardingActivity;
 import com.example.thirsttap.ForgotPassword.ForgotPasswordActivity;
 import com.example.thirsttap.MainActivity;
+import com.example.thirsttap.MyFirebaseMessagingService;
 import com.example.thirsttap.R;
 import com.example.thirsttap.Signup.EmailVerificationBottomSheet;
 import com.example.thirsttap.Signup.SignupBottomSheet;
@@ -108,6 +113,9 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         return view;
     }
 
+
+
+
     private boolean validateEmail() {
         String val = email.getText().toString().trim();
 
@@ -161,6 +169,19 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
 
                                 // Save the user's profile data
                                 saveUserProfile(userEmail, userName, userPhoneNum, userid, isNewUser);
+
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_profile", Context.MODE_PRIVATE);
+                                String fcmToken = sharedPreferences.getString("fcm_token", null);
+
+                                // Get the FCM token and send it to the server
+                                if (fcmToken != null) {
+                                    Log.d("FCM", "FCM should be sent by now");
+                                    MyFirebaseMessagingService.sendTokenToServer(fcmToken, userid, getContext());
+                                } else {
+                                    Log.d("FCM", "FCM is null");
+                                }
+
+
 
                                 // Start the appropriate activity based on the user's status
                                 if (isNewUser) {
@@ -291,7 +312,6 @@ public class LoginBottomSheet extends BottomSheetDialogFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
     }
-
 
 
 

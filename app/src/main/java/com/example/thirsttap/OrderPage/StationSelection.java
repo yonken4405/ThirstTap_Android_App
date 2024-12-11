@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StationSelection extends Fragment implements OnMapReadyCallback {
@@ -134,17 +145,14 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnMarkerClickListener(marker -> {
             // Check if the clicked marker is the user's marker
-            if (marker.equals(currentMarker)) {
-                return false; // Ignore click events for the user's marker
-            } else if (marker.equals(defaultAddressMarker )) {
-                return false; // Ignore click events for the user's marker
+            if (marker.equals(currentMarker) || marker.equals(defaultAddressMarker)) {
+                return false; // Ignore click events for these markers
             }
             // Otherwise, handle clicks on station markers
             showStationDetails(marker); // Show station details
             return true; // Indicate that we've handled the click
         });
     }
-
 
     private void fetchStations() {
         loader.setVisibility(View.VISIBLE);
@@ -154,31 +162,42 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, stationUrl,
                 response -> {
                     loader.setVisibility(View.GONE);
+                    Log.d("fetchStations", "Response: " + response); // Log the full response
                     try {
                         JSONArray stationsArray = new JSONArray(response);
                         for (int i = 0; i < stationsArray.length(); i++) {
                             JSONObject station = stationsArray.getJSONObject(i);
+                            // Log each station's details
+                            Log.d("fetchStations", "Processing station: " + station.toString());
+
                             double latitude = station.getDouble("latitude");
                             double longitude = station.getDouble("longitude");
-                            stationName = station.getString("name");
-                            stationAddress = station.getString("station_address");
-                            String contactNumber = station.getString("contact_number");
-                            String email = station.getString("email");
-                            String openingHours = station.getString("opening_hours");
-                            stationId = station.getString("station_id");
-                            addStationMarkers(latitude, longitude, stationName, stationAddress, contactNumber, email, openingHours, stationId);
+                            String stationName = station.getString("station_name");
+                            String stationAddress = station.getString("station_address");
+                            String contactNumber = station.optString("contact_number", "N/A"); // Use optString for optional fields
+                            String email = station.optString("email", "N/A"); // Use optString for optional fields
+                            JSONArray scheduleArray = station.optJSONArray("schedule");
 
+                            String openingHours = createOpeningHoursString(scheduleArray);
+                            String stationId = station.getString("station_id");
+
+                            // Log the generated opening hours string
+                            Log.d("fetchStations", "Opening hours for " + stationName + ": " + openingHours);
+
+                            // Determine if the station is closed today
+                            boolean isClosedToday = isStationClosedToday(scheduleArray);
+
+                            // Pass all required information to addStationMarkers
+                            addStationMarkers(latitude, longitude, stationName, stationAddress, contactNumber, email, openingHours, stationId, isClosedToday);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Toast.makeText(requireContext(), "Error parsing station data", Toast.LENGTH_SHORT).show();
                     }
-                    Log.d("Response", response);
-
                 },
                 error -> {
                     loader.setVisibility(View.GONE);
-                    Log.e("VolleyError", error.toString());
+                    Log.e("fetchStations", "Volley error: " + error.toString());
                     Toast.makeText(requireContext(), "Error fetching stations", Toast.LENGTH_SHORT).show();
                 });
 
@@ -186,20 +205,191 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         requestQueue.add(stringRequest);
     }
 
-    private void addStationMarkers(double latitude, double longitude, String stationName, String stationAddress, String contactNumber, String email, String openingHours, String stationId) {
+    // Method to check if the station is closed today
+    private boolean isStationClosedToday(JSONArray scheduleArray) throws JSONException {
+        if (scheduleArray == null || scheduleArray.length() == 0) {
+            return true; // Assume closed if no schedule
+        }
+
+        // Get the current day of the week (0 = Monday, 1 = Tuesday, ..., 6 = Sunday)
+        Calendar calendar = Calendar.getInstance();
+        int todayIndex = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7; // Adjusting to match your indexing (Monday = 0)
+
+        JSONObject todaySchedule = scheduleArray.getJSONObject(todayIndex);
+        String isClosedStr = todaySchedule.optString("is_closed", "0");
+
+        if ("1".equals(isClosedStr)) {
+            return true; // The station is closed for the entire day
+        }
+
+        // Parse opening and closing times
+        String openingTimeStr = todaySchedule.optString("opening_time", "00:00:00");
+        String closingTimeStr = todaySchedule.optString("closing_time", "00:00:00");
+
+        // Get the current time
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String currentTimeStr = timeFormat.format(calendar.getTime());
+
+        try {
+            // Parse the times into Date objects
+            Date currentTime = timeFormat.parse(currentTimeStr);
+            Date openingTime = timeFormat.parse(openingTimeStr);
+            Date closingTime = timeFormat.parse(closingTimeStr);
+
+            // Compare the current time with the opening and closing times
+            if (currentTime != null && (currentTime.before(openingTime) || currentTime.after(closingTime))) {
+                return true; // Station is closed outside its operating hours
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return true; // Assume closed if there's an error in parsing times
+        }
+
+        return false; // The station is open
+    }
+
+
+    private String createOpeningHoursString(JSONArray scheduleArray) throws JSONException {
+        if (scheduleArray == null || scheduleArray.length() == 0) {
+            return "No schedule available"; // Handle empty or null schedules
+        }
+
+        Map<String, String> scheduleMap = new LinkedHashMap<>();
+        // Create a mapping of full day names to their shorthand versions
+        Map<String, String> dayMap = new HashMap<>();
+        dayMap.put("monday", "Mon");
+        dayMap.put("tuesday", "Tue");
+        dayMap.put("wednesday", "Wed");
+        dayMap.put("thursday", "Thu");
+        dayMap.put("friday", "Fri");
+        dayMap.put("saturday", "Sat");
+        dayMap.put("sunday", "Sun");
+
+        for (int i = 0; i < scheduleArray.length(); i++) {
+            JSONObject daySchedule = scheduleArray.getJSONObject(i);
+            String dayOfWeek = daySchedule.optString("day_of_week", null);
+            String isClosedStr = daySchedule.optString("is_closed", "0");
+            boolean isClosed = "1".equals(isClosedStr); // Convert to boolean
+
+            if (dayOfWeek == null) {
+                Log.w("createOpeningHoursString", "Day of week is null for entry: " + daySchedule.toString());
+                continue; // Skip this entry if day of week is null
+            }
+
+            // Convert the full day name to shorthand
+            String shortDay = dayMap.getOrDefault(dayOfWeek, dayOfWeek);
+
+            if (isClosed) {
+                scheduleMap.put(shortDay, "Closed");
+            } else {
+                String openingTime = formatTime(daySchedule.optString("opening_time", "00:00:00"));
+                String closingTime = formatTime(daySchedule.optString("closing_time", "00:00:00"));
+                scheduleMap.put(shortDay, openingTime + " - " + closingTime);
+            }
+        }
+
+        // Create a compressed schedule string
+        return compressSchedule(scheduleMap);
+    }
+
+    private String compressSchedule(Map<String, String> scheduleMap) {
+        StringBuilder openingHours = new StringBuilder();
+        List<String> daysList = new ArrayList<>(scheduleMap.keySet());
+        String previousOpeningHours = "";
+        int startRange = -1; // Initialize to -1 to indicate no range started
+
+        for (int i = 0; i < daysList.size(); i++) {
+            String currentDay = daysList.get(i);
+            String currentOpeningHours = scheduleMap.get(currentDay);
+
+            if (previousOpeningHours.equals(currentOpeningHours)) {
+                // If current hours are the same as previous, continue the range
+                continue;
+            } else {
+                // If different and previous is not the same as "Closed"
+                if (startRange != -1 && !previousOpeningHours.equals("Closed")) {
+                    if (startRange == i - 1) {
+                        openingHours.append(daysList.get(startRange)).append(": ").append(previousOpeningHours).append("\n");
+                    } else {
+                        openingHours.append(getDayRange(startRange, i - 1)).append(": ").append(previousOpeningHours).append("\n");
+                    }
+                }
+                // Reset for the new range
+                startRange = i; // Start a new range
+                previousOpeningHours = currentOpeningHours;
+            }
+        }
+
+        // Handle the last range
+        if (startRange != -1) { // Only proceed if a range was started
+            if (!previousOpeningHours.equals("Closed")) {
+                if (startRange == daysList.size() - 1) {
+                    openingHours.append(daysList.get(startRange)).append(": ").append(previousOpeningHours);
+                } else {
+                    openingHours.append(getDayRange(startRange, daysList.size() - 1)).append(": ").append(previousOpeningHours);
+                }
+            } else {
+                // Handle the case for "Closed" days
+                openingHours.append(getDayRange(startRange, daysList.size() - 1)).append(": Closed");
+            }
+        }
+
+        return openingHours.toString().trim(); // Remove trailing newline
+    }
+
+    // Generate a string for the range of days
+    private String getDayRange(int startIndex, int endIndex) {
+        String[] daysOfWeek = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        if (startIndex == endIndex) {
+            return daysOfWeek[startIndex]; // Same day
+        } else {
+            return daysOfWeek[startIndex] + " - " + daysOfWeek[endIndex]; // Range
+        }
+    }
+
+    // Helper method to format time from 24-hour to 12-hour format
+    private String formatTime(String time) {
+        String[] parts = time.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        String minutes = parts[1];
+        String period = "AM";
+
+        if (hours >= 12) {
+            period = "PM";
+            if (hours > 12) {
+                hours -= 12;
+            }
+        } else if (hours == 0) {
+            hours = 12; // Midnight case
+        }
+
+        return String.format("%d:%s %s", hours, minutes, period);
+    }
+
+
+    // Modify addStationMarkers method to include isClosedToday parameter
+    private void addStationMarkers(double latitude, double longitude, String stationName, String stationAddress, String contactNumber, String email, String openingHours, String stationId, boolean isClosedToday) {
         LatLng stationLocation = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(stationLocation)
                 .title(stationName)
-                .icon(getBitmapDescriptorFromVector(R.drawable.baseline_location_pin_24)); // Use your custom drawable
+                .icon(getBitmapDescriptorFromVector(R.drawable.baseline_location_pin_24));
 
         Marker marker = googleMap.addMarker(markerOptions);
-        marker.setTag(new String[]{stationName, stationAddress, contactNumber, email, openingHours, stationId}); // Store additional data
+        marker.setTag(new String[]{stationName, stationAddress, contactNumber, email, openingHours, stationId, String.valueOf(isClosedToday)}); // Store isClosedToday
     }
 
 
+    // Update showStationDetails to reflect open/closed status
     private void showStationDetails(Marker marker) {
         String[] stationDetails = (String[]) marker.getTag();
+
+        if (stationDetails == null) {
+            // Handle the case where the tag is null (this should not happen for valid station markers)
+            Log.e("StationSelection", "Marker tag is null for marker: " + marker.getTitle());
+            return; // Exit the method if the station details are not available
+        }
+
         BottomSheetDialog stationDetailsDialog = new BottomSheetDialog(requireContext());
         View view = getLayoutInflater().inflate(R.layout.station_profile_bottom_sheet, null);
 
@@ -218,30 +408,49 @@ public class StationSelection extends Fragment implements OnMapReadyCallback {
         TextView openingHoursTv = view.findViewById(R.id.opening_hours);
         openingHoursTv.setText(stationDetails[4]);
 
-        orderButton = view.findViewById(R.id.order_button);
-        orderButton.setOnClickListener(v -> {
+        TextView stationStatus = view.findViewById(R.id.status);
 
+        orderButton = view.findViewById(R.id.order_button);
+
+        // Get today's date and check if the station is closed today
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String today = dateFormat.format(calendar.getTime()).toLowerCase();
+
+        // Determine if the station is closed today
+        boolean isClosedToday = Boolean.parseBoolean(stationDetails[6]); // Assuming this is correct
+
+        if (isClosedToday) {
+            stationStatus.setText("Closed");
+            stationStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+            orderButton.setEnabled(false); // Disable the button
+            orderButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.InputText)); // Change button color to gray
+            Toast.makeText(requireContext(), "The station is closed today.", Toast.LENGTH_SHORT).show();
+        } else {
+            stationStatus.setText("Open");
+            stationStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.blueFont));
+            orderButton.setEnabled(true); // Enable the button
+            orderButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blueFont)); // Change button color to gray
+        }
+
+
+        orderButton.setOnClickListener(v -> {
             if (orderViewModel != null) {
                 orderViewModel.setStationData(stationDetails[0], stationDetails[1], stationDetails[4], stationDetails[5]);
             } else {
-                // Handle the case where orderViewModel is null
                 Log.e("StationSelection", "OrderViewModel is null");
             }
 
-
             Log.d("stationselect stationid", stationDetails[5]);
 
-            // Create and set up the OrderFragment
             OrderFragment fragment = new OrderFragment();
-            //fragment.setArguments(bundle); // Pass the bundle to OrderFragment
             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
 
             orderViewModel.clearCart();
-            stationDetailsDialog.dismiss(); // Dismiss the dialog after navigating
+            stationDetailsDialog.dismiss();
         });
 
         stationDetailsDialog.setContentView(view);
-
         stationDetailsDialog.show();
     }
 

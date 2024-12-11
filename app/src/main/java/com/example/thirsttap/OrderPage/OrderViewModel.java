@@ -40,11 +40,21 @@ public class OrderViewModel extends ViewModel {
         }
     }
 
+
+
     // Method to add a new order item
-    public static void addOrderItem(OrderItem orderItem) {
+    public void addOrderItem(OrderItem orderItem) {
         List<OrderItem> currentList = orderItems.getValue();
         if (currentList != null) {
-            currentList.add(orderItem);
+            // Check if the item already exists based on key attributes
+            for (OrderItem existingItem : currentList) {
+                if (existingItem.isEqual(orderItem)) {
+                    existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+                    orderItems.setValue(currentList);  // Update the list in LiveData
+                    return;
+                }
+            }
+            currentList.add(orderItem); // Add new item if not found
             orderItems.setValue(currentList);  // Update the list in LiveData
         }
     }
@@ -52,11 +62,13 @@ public class OrderViewModel extends ViewModel {
     // Method to remove a specific order item
     public void removeOrderItem(OrderItem item) {
         List<OrderItem> currentList = orderItems.getValue();
-        if (currentList != null && currentList.contains(item)) {
-            currentList.remove(item);  // Remove the specified item
+        if (currentList != null) {
+            boolean removed = currentList.remove(item);  // Remove the specified item
+            if (!removed) {
+                Log.e("OrderViewModel", "Item not found for removal: " + item);
+            }
             orderItems.setValue(currentList);  // Update the list in LiveData
         }
-        Log.d("list of orders", currentList.toString());
     }
 
     // Update the removeItemsWithZeroQuantity method to simply return current items
