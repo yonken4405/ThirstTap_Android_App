@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -169,7 +170,7 @@ public class ForgotPasswordFragment3 extends Fragment {
 
     private void showPopup() {
         // Inflate the popup_layout.xml
-        LayoutInflater inflater = getLayoutInflater(); // Use getLayoutInflater() instead of getSystemService
+        LayoutInflater inflater = getLayoutInflater();
         View popupView = inflater.inflate(R.layout.email_verified_popup, null);
 
         // Create the PopupWindow with the size specified in XML
@@ -180,7 +181,6 @@ public class ForgotPasswordFragment3 extends Fragment {
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // Show the PopupWindow at the center of the parent view
-        // Use getView() to get the fragment's root view instead of findViewById()
         popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);
 
         // Handle close button inside the popup
@@ -191,11 +191,13 @@ public class ForgotPasswordFragment3 extends Fragment {
                 popupWindow.dismiss();
 
                 // After closing the popup, navigate to the LoginFragment
-                startActivity(new Intent(getActivity(), LoginFragment.class));
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, new LoginFragment())
+                        .addToBackStack(null)
+                        .commit();
             }
-
-
         });
-
     }
+
 }

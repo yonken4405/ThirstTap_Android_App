@@ -182,6 +182,7 @@
             android:textColor="@color/black"
             android:textSize="11sp"
             app:cornerRadius="24dp"
+            android:enabled="false"
             android:elevation="2dp"/>
 
         <LinearLayout

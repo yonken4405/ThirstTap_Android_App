@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="my_string_api_key"></string>
     
     <string name="ascending">Sort Ascending</string>
     <string name="descending">Sort Descending</string>
